@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "buildCommand": "npm install",
+  "env": {
+    "REACT_APP_API_URL": {
+      "description": "Backend API base URL (from Render)",
+      "required": true
+    },
+    "NODE_ENV": {
+      "default": "production"
+    }
+  },
+  "env_example": {
+    "REACT_APP_API_URL": "https://playbeat-backend.onrender.com"
+  },
+  "functions": {
+    "server.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/server.js"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/server.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "public": {
+    "extensions": ["html", "css", "js", "json", "png", "jpg", "jpeg", "gif", "svg", "ico", "webp"]
+  }
+}

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayBeat Admin</title>
+  <style>
+    :root{
+      --bg:#02050b;
+      --bg2:#07111d;
+      --bg3:#0d1624;
+      --bg4:#121c2c;
+      --text:#e8edf5;
+      --text2:#b8c4d8;
+      --text3:#91a0ba;
+      --border:rgba(80,140,220,.13);
+      --border2:rgba(192,204,224,.18);
+      --red:#c0392b;
+      --red2:#e35b4a;
+      --redGlow:rgba(192,57,43,.28);
+      --green:#34d399;
+      --amber:#f5a623;
+      --blue:#5aa7ff;
+      --shadow:0 18px 48px rgba(0,0,0,.42);
+      --radius:18px;
+      --radius-sm:12px;
+      --radius-xs:10px;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      --sans:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(90,167,255,.12), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(192,57,43,.11), transparent 23%),
+        radial-gradient(circle at 50% 100%, rgba(176,196,255,.08), transparent 35%),
+        linear-gradient(180deg,var(--bg),#010203);
+      overflow:hidden;
+    }
+    .app{
+      display:grid;
+      grid-template-columns:280px 1fr;
+      height:100vh;
+    }
+    .sidebar{
+      background:linear-gradient(180deg,#040912,#09111d);
+      border-right:1px solid var(--border);
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      box-shadow:inset -1px 0 0 rgba(255,255,255,.03);
+    }
+    .brand{
+      padding:18px;
+      border:1px solid var(--border);
+      border-radius:20px;
+      background:linear-gradient(180deg,rgba(14,21,34,.92),rgba(7,11,18,.96));
+      box-shadow:0 0 0 1px rgba(192,204,224,.04), var(--shadow);
+    }
+    .brand h1,.metric h3,.card h2,.topbar h2,.section-title{
+      margin:0;
+      background:linear-gradient(90deg,#b8c4d8,#d8e0ef);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:0 0 18px rgba(90,167,255,.06);
+    }
+    .brand h1{font-size:24px;letter-spacing:.5px}
+    .brand p{margin:8px 0 0;color:var(--text3);font-size:12px}
+    .pulse{
+      display:inline-block;width:10px;height:10px;border-radius:50%;
+      background:var(--green);box-shadow:0 0 0 0 rgba(52,211,153,.55);
+      animation:pulse 2s infinite;
+      margin-right:8px;
+    }
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.55)}70%{box-shadow:0 0 0 10px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+    .nav{display:flex;flex-direction:column;gap:8px}
+    .nav .item{
+      position:relative;
+      padding:12px 14px 12px 16px;
+      border:1px solid transparent;
+      border-radius:14px;
+      color:var(--text2);
+      cursor:pointer;
+      transition:.2s;
+      background:transparent;
+    }
+    .nav .item:hover{background:rgba(90,167,255,.06);border-color:var(--border)}
+    .nav .item.active{
+      color:#fff;
+      background:linear-gradient(90deg,rgba(192,57,43,.18),rgba(90,167,255,.08));
+      border-color:rgba(192,57,43,.35);
+      box-shadow:0 0 24px rgba(192,57,43,.16);
+    }
+    .nav .item.active:before{
+      content:"";
+      position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:999px;
+      background:linear-gradient(180deg,#ff7a6c,var(--red));
+      box-shadow:0 0 16px var(--redGlow);
+    }
+    .sidebar-footer{
+      margin-top:auto;
+      padding:14px;
+      border-top:1px solid var(--border);
+      color:var(--text3);
+      font-size:12px;
+    }
+
+    .main{display:flex;flex-direction:column;min-width:0;height:100vh}
+    .topbar{
+      height:76px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg,rgba(8,14,24,.92),rgba(5,8,13,.92));
+      backdrop-filter:blur(14px);
+    }
+    .topbar h2{font-size:20px}
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .btn{
+      border:1px solid var(--border2);
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      transition:.2s;
+      font-family:inherit;
+      box-shadow:0 8px 22px rgba(0,0,0,.14);
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(90,167,255,.24)}
+    .btn-primary{
+      background:linear-gradient(90deg,var(--red),#d94c3d);
+      border-color:rgba(255,122,108,.35);
+      color:#fff;
+      box-shadow:0 0 0 1px rgba(255,255,255,.03),0 0 24px rgba(192,57,43,.22);
+    }
+    .btn-primary:hover{box-shadow:0 0 30px rgba(192,57,43,.34)}
+    .content{
+      padding:22px;
+      overflow:auto;
+      height:calc(100vh - 76px);
+    }
+    .content::-webkit-scrollbar{width:8px}
+    .content::-webkit-scrollbar-thumb{background:rgba(90,167,255,.18);border-radius:999px}
+    .section{display:none}
+    .section.active{display:block}
+    .grid-4,.grid-3,.grid-2{display:grid;gap:16px}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metric,.card,.login-card,.gateway{
+      position:relative;
+      background:linear-gradient(180deg,rgba(9,16,27,.96),rgba(10,15,24,.96));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .metric:before{
+      content:"";
+      position:absolute;left:0;top:0;right:0;height:3px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),var(--red),rgba(90,167,255,.75),transparent);
+      background-size:200% 100%;
+      animation:shimmer 3s linear infinite;
+    }
+    @keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
+    .metric{padding:18px}
+    .label{color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+    .value{
+      margin-top:10px;
+      font-size:28px;
+      font-weight:700;
+      background:linear-gradient(90deg,#b8c4d8,#d8e0ef);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .delta{margin-top:6px;font-size:12px;color:var(--text3)}
+    .card{padding:18px}
+    .card h2{font-size:16px}
+    .sub{color:var(--text3);font-size:12px}
+    .table{width:100%;border-collapse:collapse;font-size:13px}
+    .table th,.table td{padding:10px 8px;border-bottom:1px solid rgba(80,140,220,.12);text-align:left}
+    .table th{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.09em}
+    .pill{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;display:inline-block}
+    .pill-green{background:rgba(52,211,153,.12);color:var(--green)}
+    .pill-red{background:rgba(192,57,43,.14);color:#ff8070}
+    .pill-amber{background:rgba(245,166,35,.12);color:#f8be5d}
+    .pill-blue{background:rgba(90,167,255,.12);color:#8dc2ff}
+    .pill-accent{background:rgba(192,57,43,.12);color:#ff9487}
+    .toggle{
+      position:relative;width:42px;height:24px;display:inline-block;vertical-align:middle;
+    }
+    .toggle input{opacity:0;width:0;height:0}
+    .slider{
+      position:absolute;inset:0;border-radius:999px;background:#152033;border:1px solid var(--border);
+      transition:.2s;
+    }
+    .slider:before{
+      content:"";position:absolute;width:16px;height:16px;left:4px;top:3px;border-radius:50%;
+      background:#fff;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.4)
+    }
+    .toggle input:checked + .slider{
+      background:linear-gradient(90deg,#c0392b,#e35b4a);
+      box-shadow:0 0 18px rgba(192,57,43,.25)
+    }
+    .toggle input:checked + .slider:before{transform:translateX(18px)}
+    input,select{
+      width:100%;
+      background:#07111b;
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+      font:inherit;
+    }
+    input:focus,select:focus{border-color:rgba(90,167,255,.35);box-shadow:0 0 0 3px rgba(90,167,255,.08)}
+    .login-screen{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(90,167,255,.15), transparent 25%),
+        radial-gradient(circle at 80% 0%, rgba(192,57,43,.18), transparent 22%),
+        linear-gradient(180deg,#02050b,#060a12);
+      z-index:20;
+    }
+    .login-card{
+      width:min(440px,92vw);
+      padding:28px;
+      border:1px solid rgba(90,167,255,.18);
+      background:
+        linear-gradient(135deg,rgba(192,57,43,.16),rgba(10,16,27,.96) 40%,rgba(90,167,255,.10)),
+        linear-gradient(180deg,#07111d,#05080e);
+      box-shadow:0 0 0 1px rgba(255,255,255,.02),0 0 42px rgba(192,57,43,.14),0 0 90px rgba(90,167,255,.08);
+    }
+    .login-card:before{
+      content:"";
+      position:absolute;inset:-120% 0 auto 0;height:160px;
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.10),transparent);
+      transform:rotate(18deg);
+      animation:scan 4.5s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes scan{0%{transform:translateY(-120%) rotate(18deg)}100%{transform:translateY(900px) rotate(18deg)}}
+    .login-card h1{margin:0 0 8px;font-size:30px}
+    .login-card p{margin:0 0 18px;color:var(--text3)}
+    .stack{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .stack div{padding:10px;border:1px solid var(--border);border-radius:12px;color:var(--text2);background:rgba(255,255,255,.02);font-size:12px}
+    .hint{color:var(--text3);font-size:12px;margin-top:14px}
+    .prompt-box{white-space:pre-wrap;line-height:1.8;color:var(--text2);font-family:var(--mono);font-size:12px}
+    .mini-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid rgba(80,140,220,.12)}
+    .mini-row:last-child{border-bottom:none}
+    .status-dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(52,211,153,.5);animation:pulse 2s infinite}
+    .search-bar{max-width:220px}
+    .alert{padding:12px 14px;border:1px solid rgba(245,166,35,.22);background:rgba(245,166,35,.08);border-radius:14px;color:#ffd28b;margin-bottom:16px}
+    @media(max-width:1200px){
+      .app{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .grid-4,.grid-3,.grid-2{grid-template-columns:1fr}
+      .content{padding:16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <h1>PlayBeat Admin</h1>
+      <p>Ultra-premium secure login</p>
+      <input id="username" type="text" placeholder="Username" style="margin-bottom:10px" value="admin">
+      <input id="password" type="password" placeholder="Password" style="margin-bottom:14px" value="admin123">
+      <button class="btn btn-primary" style="width:100%" onclick="login()">Sign In</button>
+      <div class="stack">
+        <div>Dashboard</div><div>Payments</div><div>Inventory</div><div>Analytics</div>
+      </div>
+      <div class="hint">Authorised personnel only.</div>
+    </div>
+  </div>
+
+  <div class="app" id="app" style="display:none">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>PlayBeat</h1>
+        <p><span class="pulse"></span>Admin Backend · Live</p>
+      </div>
+
+      <div class="nav">
+        <div class="item active" onclick="showSection('dashboard',this)">Dashboard</div>
+        <div class="item" onclick="showSection('inventory',this)">Inventory</div>
+        <div class="item" onclick="showSection('orders',this)">Orders</div>
+        <div class="item" onclick="showSection('payments',this)">Payments</div>
+        <div class="item" onclick="showSection('channels',this)">Channels</div>
+        <div class="item" onclick="showSection('customers',this)">Customers</div>
+        <div class="item" onclick="showSection('prompt',this)">Prompt</div>
+        <div class="item" onclick="showSection('settings',this)">Settings</div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:12px;background:rgba(192,57,43,.16);display:grid;place-items:center;color:#fff;font-weight:800">PB</div>
+          <div>
+            <div style="color:var(--text)">Admin</div>
+            <div>Super Admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h2 id="pageTitle">Dashboard</h2>
+        <div class="top-actions">
+          <span class="pill pill-green">Live</span>
+          <button class="btn btn-primary">Save All</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <section id="dashboard" class="section active">
+          <div class="alert">3 alerts need attention — 7 pending deliveries, 5 low stock items, 1 stuck payment</div>
+          <div class="grid-4">
+            <div class="metric"><div class="label">Revenue (PKR)</div><div class="value">₨4.2L</div><div class="delta">↑ 18% vs yesterday</div></div>
+            <div class="metric"><div class="label">Orders Today</div><div class="value">312</div><div class="delta">↑ 24 new</div></div>
+            <div class="metric"><div class="label">Pending Delivery</div><div class="value">7</div><div class="delta">needs action</div></div>
+            <div class="metric"><div class="label">Low Stock Items</div><div class="value">5</div><div class="delta">restock needed</div></div>
+          </div>
+          <div class="grid-2" style="margin-top:16px">
+            <div class="card">
+              <h2>Recent Orders</h2>
+              <table class="table">
+                <tr><th>Order</th><th>Product</th><th>Method</th><th>Status</th></tr>
+                <tr><td class="mono">#4821</td><td>ChatGPT Plus 1M</td><td>JazzCash</td><td><span class="pill pill-green">Delivered</span></td></tr>
+                <tr><td class="mono">#4819</td><td>PS Plus 12M</td><td>Easypaisa</td><td><span class="pill pill-amber">Pending</span></td></tr>
+                <tr><td class="mono">#4817</td><td>Midjourney Basic</td><td>JazzCash</td><td><span class="pill pill-red">Failed</span></td></tr>
+              </table>
+            </div>
+            <div class="card">
+              <h2>Payment Breakdown</h2>
+              <div class="mini-row"><span>JazzCash</span><span>38%</span></div>
+              <div class="mini-row"><span>Easypaisa</span><span>27%</span></div>
+              <div class="mini-row"><span>Card</span><span>21%</span></div>
+              <div class="mini-row"><span>Bank Transfer</span><span>14%</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="inventory" class="section">
+          <div class="grid-4">
+            <div class="metric"><div class="label">Total SKUs</div><div class="value">18</div></div>
+            <div class="metric"><div class="label">In Stock</div><div class="value">11</div></div>
+            <div class="metric"><div class="label">Low Stock</div><div class="value">4</div></div>
+            <div class="metric"><div class="label">Out of Stock</div><div class="value">3</div></div>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h2>Product Catalog</h2>
+            <table class="table">
+              <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Delivery</th></tr>
+              <tr><td>ChatGPT Plus 1M</td><td><span class="pill pill-blue">AI Tools</span></td><td class="mono">₨ 5,500</td><td><span class="pill pill-green">142 keys</span></td><td><span class="pill pill-green">Instant</span></td></tr>
+              <tr><td>PS Plus 12M</td><td><span class="pill pill-blue">Subscriptions</span></td><td class="mono">₨ 16,400</td><td><span class="pill pill-amber">9 keys</span></td><td><span class="pill pill-green">Instant</span></td></tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="orders" class="section">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px">
+              <h2>Orders</h2>
+              <select class="search-bar"><option>All statuses</option><option>Delivered</option><option>Pending</option><option>Failed</option><option>Refunded</option></select>
+            </div>
+            <table class="table">
+              <tr><th>ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Method</th><th>Status</th></tr>
+              <tr><td class="mono">#4821</td><td>Ali Hassan</td><td>ChatGPT Plus 1M</td><td class="mono">₨5,500</td><td>JazzCash</td><td><span class="pill pill-green">Delivered</span></td></tr>
+              <tr><td class="mono">#4819</td><td>Bilal Khan</td><td>PS Plus 12M</td><td class="mono">₨16,400</td><td>Easypaisa</td><td><span class="pill pill-amber">Pending</span></td></tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="payments" class="section">
+          <div class="grid-3">
+            <div class="metric"><div class="label">Success Rate</div><div class="value">96.4%</div><div class="delta">↑ 1.2% this week</div></div>
+            <div class="metric"><div class="label">Avg Processing</div><div class="value">1.8s</div><div class="delta">JazzCash / Easypaisa</div></div>
+            <div class="metric"><div class="label">Pending Review</div><div class="value">3</div><div class="delta">Bank TXNs awaiting</div></div>
+          </div>
+
+          <div class="card" style="margin-top:16px">
+            <h2>Active Payment Methods</h2>
+            <div class="mini-row"><span>JazzCash</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="mini-row"><span>Easypaisa</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="mini-row"><span>Bank Transfer (IBFT)</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+            <div class="mini-row"><span>Stripe</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+          </div>
+
+          <div class="grid-2" style="margin-top:16px">
+            <div class="gateway"><div class="card"><h2>JazzCash</h2><input value="MC12345" style="margin-bottom:10px"><input value="https://playbeat.digital/payment/jazzcash/return" style="margin-bottom:10px"><button class="btn btn-primary">Verify</button></div></div>
+            <div class="gateway"><div class="card"><h2>Easypaisa</h2><input value="12345678" style="margin-bottom:10px"><input value="https://playbeat.digital/api/webhooks/easypaisa" style="margin-bottom:10px"><button class="btn btn-primary">Verify</button></div></div>
+            <div class="gateway"><div class="card"><h2>IBFT</h2><input value="PlayBeat Digital" style="margin-bottom:10px"><input value="PK36SCBL0000001123456702" style="margin-bottom:10px"><button class="btn">Save</button></div></div>
+            <div class="gateway"><div class="card"><h2>Stripe</h2><input value="pk_live_xxx" style="margin-bottom:10px"><input value="https://playbeat.digital/api/webhooks/stripe" style="margin-bottom:10px"><button class="btn btn-primary">Verify</button></div></div>
+          </div>
+        </section>
+
+        <section id="channels" class="section">
+          <div class="grid-2">
+            <div class="card">
+              <h2>Sales Channels</h2>
+              <div class="mini-row"><span>playbeat.digital</span><span class="pill pill-green">Live</span></div>
+              <div class="mini-row"><span>WhatsApp</span><span class="pill pill-green">Active</span></div>
+              <div class="mini-row"><span>Telegram Bot</span><span class="pill pill-green">Active</span></div>
+              <div class="mini-row"><span>Discord</span><span class="pill pill-amber">Beta</span></div>
+            </div>
+            <div class="card">
+              <h2>Channel Monitor</h2>
+              <table class="table">
+                <tr><th>Channel</th><th>Orders</th><th>Revenue</th><th>Uptime</th></tr>
+                <tr><td>Website</td><td>274</td><td class="mono">₨3.71L</td><td><span class="pill pill-green">99.9%</span></td></tr>
+                <tr><td>WhatsApp</td><td>22</td><td class="mono">₨28K</td><td><span class="pill pill-green">100%</span></td></tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="customers" class="section">
+          <div class="grid-4">
+            <div class="metric"><div class="label">Total Customers</div><div class="value">8,412</div></div>
+            <div class="metric"><div class="label">New This Month</div><div class="value">342</div><div class="delta">↑ 12%</div></div>
+            <div class="metric"><div class="label">Repeat Buyers</div><div class="value">61%</div></div>
+            <div class="metric"><div class="label">Avg Order Value</div><div class="value">₨5,200</div></div>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h2>Top Customers</h2>
+            <table class="table">
+              <tr><th>Name</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Status</th></tr>
+              <tr><td>Ali Hassan</td><td class="mono">ali@example.pk</td><td>24</td><td class="mono">₨1.2L</td><td><span class="pill pill-green">Active</span></td></tr>
+            </table>
+          </div>
+        </section>
+
+        <section id="prompt" class="section">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <h2>Backend System Prompt</h2>
+              <button class="btn">Copy prompt</button>
+            </div>
+            <div class="prompt-box">You are the backend admin AI assistant for PlayBeat Digital...
+Use PKR, keep responses concise, and never expose secrets.</div>
+          </div>
+        </section>
+
+        <section id="settings" class="section">
+          <div class="grid-2">
+            <div class="card">
+              <h2>Store Configuration</h2>
+              <div class="mini-row"><span>Store Name</span><span>PlayBeat Digital</span></div>
+              <div class="mini-row"><span>Domain</span><span class="mono">playbeat.digital</span></div>
+              <div class="mini-row"><span>Currency</span><span>PKR (₨)</span></div>
+              <div class="mini-row"><span>Timezone</span><span>PKT (UTC+5)</span></div>
+            </div>
+            <div class="card">
+              <h2>Notification Channels</h2>
+              <div class="mini-row"><span>Email alerts</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+              <div class="mini-row"><span>WhatsApp alerts</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+              <div class="mini-row"><span>Telegram alerts</span><label class="toggle"><input type="checkbox" checked><span class="slider"></span></label></div>
+              <div class="mini-row"><span>Discord webhook</span><label class="toggle"><input type="checkbox"><span class="slider"></span></label></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function showSection(id, el){
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      document.querySelectorAll('.nav .item').forEach(n=>n.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if(el) el.classList.add('active');
+      document.getElementById('pageTitle').textContent = el ? el.textContent.trim() : id;
+    }
+
+    async function sha256(msg){
+      const b = new TextEncoder().encode(msg);
+      const h = await crypto.subtle.digest('SHA-256', b);
+      return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('');
+    }
+
+    const ADMIN_HASH = '3c9a35c7e7b6a1a0cf57c47a8d2e5e5f9e3e7c18fce6c0f3e6c7b9f5e8c4d1a2';
+
+    async function login(){
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      if(!u || !p){ alert('Enter credentials'); return; }
+      const hash = await sha256(p);
+      if(u === 'admin' && hash === ADMIN_HASH){
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'grid';
+      }else{
+        alert('Invalid username or password');
+      }
+    }
+  </script>
+</body>
+</html>

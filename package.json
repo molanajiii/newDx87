@@ -1,0 +1,35 @@
+{
+  "name": "playbeat-digital-frontend",
+  "version": "1.0.0",
+  "description": "Pakistan's #1 Digital Marketplace - Frontend",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "playbeat",
+    "digital",
+    "marketplace",
+    "pakistan",
+    "games",
+    "subscriptions"
+  ],
+  "author": "PlayBeat Digital",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "axios": "^1.5.0",
+    "compression": "^1.7.4",
+    "helmet": "^7.0.0"
+  },
+  "devDependencies": {}
+}

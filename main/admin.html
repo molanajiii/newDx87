@@ -1,0 +1,4218 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>PlayBeat Admin Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #020305;
+            --bg2: #07111d;
+            --bg3: #0d1624;
+            --bg4: #121c2c;
+
+            --border: rgba(192, 192, 192, .15);
+            --border2: rgba(212, 175, 55, .3);
+
+            --text: #e8edf5;
+            --text2: #b8c2d0;
+            --text3: #6a7a8e;
+
+            --accent: #d4af37;
+            --accent2: #b8941f;
+            --accent-glow: rgba(212, 175, 55, .15);
+
+            --silver: #c0c0c0;
+
+            --green: #22d68a;
+            --green-bg: rgba(34, 214, 138, .1);
+
+            --amber: #f5a623;
+            --amber-bg: rgba(245, 166, 35, .1);
+
+            --red: #ff5a5a;
+            --red-bg: rgba(255, 90, 90, .1);
+
+            --blue: #4fa0ff;
+            --blue-bg: rgba(79, 160, 255, .1);
+
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(212, 175, 55, .08), transparent 25%),
+                radial-gradient(circle at top left, rgba(192, 192, 192, .05), transparent 20%),
+                var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* LOGIN */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, .92), rgba(10, 8, 2, .90));
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            width: 360px;
+            background: linear-gradient(180deg, #0a0a0a, #141414);
+            border: 1px solid rgba(212, 175, 55, .35);
+            border-radius: 20px;
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: center;
+            box-shadow: 0 0 60px rgba(212, 175, 55, .18), 0 0 120px rgba(0, 0, 0, .8);
+        }
+
+        .login-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+        }
+
+        .login-card h2 {
+            color: var(--accent);
+            font-size: 26px;
+        }
+
+        .login-card p {
+            color: var(--text3);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 13px 16px;
+            background: #050505;
+            color: var(--text);
+            border: 1px solid rgba(212, 175, 55, .25);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, .2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #8b6b14, #d4af37, #f4d06f);
+            color: #000;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .login-err {
+            color: var(--red);
+            min-height: 16px;
+            font-size: 12px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #05080f, #0a1320);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-shadow: inset -1px 0 0 rgba(212, 175, 55, .15);
+        }
+
+        .logo {
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid rgba(212, 175, 55, .12);
+        }
+
+        .logo-mark {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-bolt {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+        }
+
+        .logo-name {
+            font-size: 15px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #f4d06f, #fff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .logo-sub {
+            font-size: 10px;
+            margin-left: 36px;
+            color: var(--text3);
+            text-transform: uppercase;
+        }
+
+        nav {
+            flex: 1;
+            overflow: auto;
+            padding: 10px 0;
+        }
+
+        .nav-label {
+            padding: 12px 16px 4px;
+            color: var(--text3);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 1px 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text2);
+            font-size: 13px;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(212, 175, 55, .08);
+        }
+
+        .nav-item.active {
+            background: rgba(212, 175, 55, .12);
+            color: #f1d27a;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: var(--accent);
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--red);
+            color: #fff;
+            border-radius: 20px;
+            padding: 1px 6px;
+            font-size: 10px;
+        }
+
+        .sidebar-footer {
+            padding: 12px 8px;
+            border-top: 1px solid rgba(212, 175, 55, .12);
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-name {
+            font-size: 13px;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .section.active {
+            display: flex;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, .12);
+            background: linear-gradient(180deg, #08111d, #101a2b);
+        }
+
+        .topbar-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* GRID */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media(max-width:1200px) {
+
+            .grid-4,
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* METRIC */
+        .metric {
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #08111d, #101a2b);
+            border: 1px solid rgba(192, 192, 192, .12);
+        }
+
+        .metric-label {
+            color: var(--text3);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .metric-delta {
+            margin-top: 4px;
+            font-size: 11px;
+        }
+
+        .delta-up {
+            color: var(--green);
+        }
+
+        .delta-down {
+            color: var(--red);
+        }
+
+        .delta-flat {
+            color: var(--text3);
+        }
+
+        /* CARD */
+        .card {
+            padding: 18px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #08111d, #101a2b);
+            border: 1px solid rgba(192, 192, 192, .12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-weight: 600;
+        }
+
+        .card-sub {
+            color: var(--text3);
+            font-size: 12px;
+        }
+
+        /* ALERT */
+        .alert-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 10px;
+            background: var(--amber-bg);
+            color: var(--amber);
+            margin-bottom: 16px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text3);
+            font-weight: 500;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(192, 192, 192, .06);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(212, 175, 55, .04);
+        }
+
+        /* PILLS */
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .pill-green {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .pill-red {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .pill-amber {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        .pill-blue {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
+
+        .pill-accent {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, .05);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent2);
+            border-color: var(--accent2);
+        }
+
+        .btn-danger {
+            background: var(--red-bg);
+            color: var(--red);
+            border-color: var(--red);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text3);
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 9px 12px;
+            background: var(--bg3);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(180deg, #0c1828, #111f32);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 24px;
+            width: 480px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text3);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-err {
+            color: var(--red);
+            font-size: 12px;
+            min-height: 16px;
+            margin-top: 8px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+
+        /* BAR CHART */
+        .bar-track {
+            height: 6px;
+            background: var(--bg4);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .4s;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            color: var(--text);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity .25s, transform .25s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.ok {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .toast.err {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .toast.info {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* MONO */
+        .mono {
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        /* TOGGLE SWITCH */
+        .toggle-track {
+            width: 36px;
+            height: 20px;
+            border-radius: 20px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            position: relative;
+            transition: background .2s, border-color .2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .toggle-track.toggle-on {
+            background: var(--green-bg);
+            border-color: var(--green);
+        }
+
+        .toggle-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--text3);
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform .2s, background .2s;
+        }
+
+        .toggle-on .toggle-thumb {
+            transform: translateX(16px);
+            background: var(--green);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <img src="logo.png" alt="logo">
+            <h2>PlayBeat</h2>
+            <p>Digital Store Administration</p>
+            <input id="loginUser" class="login-input" placeholder="Username">
+            <input id="loginPass" type="password" class="login-input" placeholder="Password">
+            <div id="loginErr" class="login-err"></div>
+            <button class="login-btn" onclick="doLogin()">Sign In</button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="logo">
+            <div class="logo-mark">
+                <div class="logo-bolt">⚡</div>
+                <div class="logo-name">PlayBeat</div>
+            </div>
+            <div class="logo-sub">Admin Console</div>
+        </div>
+
+        <nav>
+            <div class="nav-label">Overview</div>
+
+            <div class="nav-item active" onclick="show('dashboard',this)">
+                <i class="ti ti-layout-dashboard"></i>
+                Dashboard
+            </div>
+
+            <div class="nav-item" onclick="show('inventory',this)">
+                <i class="ti ti-package"></i>
+                Inventory
+            </div>
+
+            <div class="nav-item" onclick="show('orders',this)">
+                <i class="ti ti-shopping-cart"></i>
+                Orders
+                <span class="nav-badge" id="badge-pending">0</span>
+            </div>
+
+            <div class="nav-item" onclick="show('customers',this)">
+                <i class="ti ti-users"></i>
+                Customers
+            </div>
+
+            <div class="nav-item" onclick="show('payments',this)">
+                <i class="ti ti-credit-card"></i>
+                Payments
+            </div>
+
+            <div class="nav-item" onclick="show('channels',this)">
+                <i class="ti ti-world"></i>
+                Channels
+            </div>
+
+            <div class="nav-item" onclick="show('prompt',this)">
+                <i class="ti ti-robot"></i>
+                AI Prompt
+            </div>
+
+            <div class="nav-item" onclick="show('settings',this)">
+                <i class="ti ti-settings"></i>
+                Settings
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-row">
+                <div id="sidebar-avatar" class="avatar">AD</div>
+                <div>
+                    <div class="user-name" id="sidebar-user">Admin</div>
+                    <div class="user-role">Super Admin</div>
+                </div>
+                <div class="status-dot"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section active">
+
+            <div class="topbar">
+                <div class="topbar-title">Dashboard</div>
+                <button class="btn btn-sm" onclick="loadDashboard()">
+                    <i class="ti ti-refresh"></i> Refresh
+                </button>
+            </div>
+
+            <div class="content">
+
+                <div id="dash-alert" class="alert-bar" style="display:none">
+                    <i class="ti ti-alert-triangle"></i>
+                    <span id="dash-alert-text"></span>
+                </div>
+
+                <div class="grid-4">
+                    <div class="metric">
+                        <div class="metric-label">Total Revenue (PKR)</div>
+                        <div class="metric-value" id="m-revenue">—</div>
+                        <div class="metric-delta delta-flat" id="m-rev-today">loading…</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Total Orders</div>
+                        <div class="metric-value" id="m-orders">—</div>
+                        <div class="metric-delta delta-flat" id="m-orders-week">loading…</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Pending Delivery</div>
+                        <div class="metric-value" id="m-pending" style="color:var(--amber)">—</div>
+                        <div class="metric-delta delta-down" id="m-processing"></div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Low Stock Items</div>
+                        <div class="metric-value" id="m-lowstock" style="color:var(--red)">—</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Recent Orders</span>
+                        </div>
+                        <table id="dash-orders-table">
+                            <tr>
+                                <td colspan="4" style="text-align:center;padding:20px">Loading...</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Payment Breakdown</span>
+                            <span class="card-sub">This month</span>
+                        </div>
+                        <div id="dash-payment-bars"></div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Top Products</span>
+                        </div>
+                        <table id="dash-top-products">
+                            <tr>
+                                <td colspan="3">Loading...</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Quick Actions</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px">
+                            <button class="btn" onclick="openAddProduct()">
+                                <i class="ti ti-plus"></i> Add Product
+                            </button>
+                            <button class="btn" onclick="seedFromProductsJS()">
+                                <i class="ti ti-database-import"></i> Seed products.js
+                            </button>
+                            <button class="btn" onclick="show('orders')">
+                                <i class="ti ti-shopping-cart"></i> View Orders
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- INVENTORY -->
+        <div id="inventory" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Inventory</div>
+                <button class="btn btn-primary" onclick="openAddProduct()">
+                    <i class="ti ti-plus"></i> Add Product
+                </button>
+            </div>
+
+            <div class="content">
+
+                <div class="grid-4">
+                    <div class="metric">
+                        <div class="metric-label">Products</div>
+                        <div class="metric-value" id="inv-total">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Active</div>
+                        <div class="metric-value" id="inv-active">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Low Stock</div>
+                        <div class="metric-value" id="inv-low">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Out of Stock</div>
+                        <div class="metric-value" id="inv-out">0</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Product Inventory</span>
+                        <span id="inv-count" class="card-sub">Loading...</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Sale</th>
+                                <th>Stock</th>
+                                <th>Sold</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inv-tbody">
+                            <tr>
+                                <td colspan="8" style="text-align:center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div id="orders" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Orders</div>
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Order Management</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr>
+                                <td colspan="7">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAYMENTS -->
+        <div id="payments" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Payment Methods & Gateway Configuration</div>
+                <button class="btn btn-primary" onclick="saveAllGateways()">Save All</button>
+            </div>
+
+            <div class="content">
+
+                <div class="grid-3">
+                    <div class="metric">
+                        <div class="metric-label">Success Rate</div>
+                        <div class="metric-value" id="pay-success-rate">—</div>
+                        <div id="pay-success-delta"></div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Avg Processing</div>
+                        <div class="metric-value" id="pay-avg-processing">—</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Pending Review</div>
+                        <div class="metric-value" id="pay-pending-review">—</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Active Payment Methods</span>
+                    </div>
+                    <div id="payment-toggles"></div>
+                </div>
+
+                <div class="grid-2" id="gateway-config-grid"></div>
+
+            </div>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div id="customers" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Customers</div>
+                <input type="search" id="cust-search" class="form-input" style="width:220px" placeholder="Search..."
+                    oninput="filterCustomers()">
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Customer List</span>
+                        <span id="cust-count" class="card-sub">—</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Orders</th>
+                                <th>Spent</th>
+                                <th>Last Order</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cust-tbody">
+                            <tr>
+                                <td colspan="5">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHANNELS -->
+        <div id="channels" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Sales Channels</div>
+            </div>
+
+            <div class="content" id="channels-content">
+                <!-- populated by loadChannels() -->
+            </div>
+        </div>
+
+        <!-- AI PROMPT -->
+        <div id="prompt" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">AI System Prompt</div>
+                <button class="btn" onclick="copyPrompt()">
+                    <i class="ti ti-copy"></i> Copy
+                </button>
+            </div>
+
+            <div class="content">
+                <div id="prompt-text" class="card" style="
+                    white-space:pre-wrap;
+                    font-family:var(--font-mono);
+                    max-height:600px;
+                    overflow:auto;
+                "></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settings" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Settings</div>
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">API Configuration</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Base URL</label>
+                        <input id="cfg-api-url" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Admin Username</label>
+                        <input id="cfg-username" class="form-input">
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px">
+                        <button class="btn btn-primary" onclick="saveApiConfig()">Save Config</button>
+                        <button class="btn" onclick="testApiConnection()">Test Connection</button>
+                    </div>
+                    <div id="cfg-msg" style="margin-top:12px;font-size:12px"></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main -->
+
+    <!-- MODAL: PRODUCT -->
+    <div id="modal-product" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-product-title">Add Product</span>
+                <button class="modal-close" onclick="closeModal('modal-product')">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Product ID</label>
+                <input id="p-id" class="form-input" placeholder="e.g. xbox-gamepass-1m">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input id="p-name" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="p-cat" class="form-input">
+                    <option value="games">Games</option>
+                    <option value="giftcards">Gift Cards</option>
+                    <option value="subscriptions">Subscriptions</option>
+                    <option value="software">Software</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div class="form-group">
+                    <label class="form-label">Price (PKR)</label>
+                    <input id="p-price" class="form-input" type="number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sale Price</label>
+                    <input id="p-sale" class="form-input" type="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Stock</label>
+                <input id="p-stock" class="form-input" type="number" value="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Badge</label>
+                <input id="p-badge" class="form-input" placeholder="e.g. HOT, NEW">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Image URL</label>
+                <input id="p-img" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea id="p-desc" class="form-input" rows="3" style="resize:vertical"></textarea>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:8px;font-size:13px">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                    <input type="checkbox" id="p-featured"> Featured
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                    <input type="checkbox" id="p-active" checked> Active
+                </label>
+            </div>
+            <div class="modal-err" id="modal-product-err"></div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-product')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: KEYS -->
+    <div id="modal-keys" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-keys-title">Add Keys</span>
+                <button class="modal-close" onclick="closeModal('modal-keys')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Keys (one per line)</label>
+                <textarea id="keys-input" class="form-input" rows="10"
+                    style="resize:vertical;font-family:var(--font-mono);font-size:12px"
+                    placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY-YYYY"></textarea>
+            </div>
+            <div class="modal-err" id="modal-keys-err"></div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-keys')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitKeys()">Add Keys</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ORDER -->
+    <div id="modal-order" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Order Detail</span>
+                <button class="modal-close" onclick="closeModal('modal-order')">✕</button>
+            </div>
+            <div id="modal-order-body"></div>
+            <div class="modal-footer" id="order-actions"></div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        /* =========================================================
+           GLOBALS
+        ========================================================= */
+        let cfg = JSON.parse(localStorage.getItem('pb_admin_cfg') || '{}');
+
+        // base API URL used by apiFetch; populate from saved config if available
+        let API_URL = (cfg && cfg.apiUrl) ? cfg.apiUrl : '';
+
+        let authToken = localStorage.getItem('pb_admin_token') || '';
+
+        const CFG_KEY = 'pb_admin_cfg';
+
+        let allProducts = [];
+        let editingProductId = null;
+        let keysProductId = null;
+        let _custData = [];
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+        function toast(msg, type = 'info') {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            el.className = 'toast';
+            if (type === 'ok') el.classList.add('ok');
+            else if (type === 'err') el.classList.add('err');
+            else el.classList.add('info');
+            el.textContent = msg;
+            requestAnimationFrame(() => { el.classList.add('show'); });
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => { el.classList.remove('show'); }, 3500);
+        }
+
+        /* =========================================================
+           MODALS
+        ========================================================= */
+        function openModal(id) { document.getElementById(id)?.classList.add('open'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+
+        /* =========================================================
+           SECTION NAVIGATION
+        ========================================================= */
+        function show(sectionId, navEl) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId)?.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (navEl) navEl.classList.add('active');
+
+            switch (sectionId) {
+                case 'dashboard': loadDashboard(); break;
+                case 'inventory': loadInventory(); break;
+                case 'orders': loadOrders(); break;
+                case 'payments': loadPayments(); break;
+                case 'customers': loadCustomers(); break;
+                case 'channels': loadChannels(); break;
+            }
+        }
+
+        /* =========================================================
+           API HELPER
+        ========================================================= */
+        async function apiFetch(path, opts = {}) {
+            const url = API_URL + path;
+            const headers = { ...(opts.headers || {}) };
+
+            // Demo mode: if API_URL is not configured, return mocked responses
+            if (!API_URL) {
+                // lightweight mock data for UI preview
+                const demoProducts = [
+                    { id: 'p1', name: 'Beat Pack A', category: 'games', price: 499, sale: 399, stock: 12, sold: 120, active: true },
+                    { id: 'p2', name: 'Gift Card 1000', category: 'giftcards', price: 1000, sale: null, stock: 0, sold: 45, active: true },
+                    { id: 'p3', name: 'Subscription Pro', category: 'subscriptions', price: 2999, sale: 2499, stock: 5, sold: 10, active: true }
+                ];
+
+                const demoOrders = [
+                    { orderId: 'ORD-1001', customer: { name: 'Ali' }, total: 1498, payment: { method: 'easypaisa' }, status: 'pending', createdAt: new Date().toISOString() },
+                    { orderId: 'ORD-1002', customer: { name: 'Sara' }, total: 499, payment: { method: 'jazzcash' }, status: 'processing', createdAt: new Date(Date.now()-3600*1000).toISOString() }
+                ];
+
+                const demoStats = {
+                    revenue: { total: 250000, today: 12000 },
+                    orders: { total: 1650, weekCount: 45, pending: 3, processing: 5 },
+                    products: { lowStock: 2 },
+                    recent: demoOrders,
+                    paymentBreakdown: [{ _id: 'easypaisa', count: 30 }, { _id: 'jazzcash', count: 50 }],
+                    topProducts: [{ name: 'Beat Pack A', category: 'games', sold: 120 }]
+                };
+
+                // route the demo responses
+                if (path.startsWith('/api/stats')) return demoStats;
+                if (path.startsWith('/api/admin/products') || path.startsWith('/api/products')) return demoProducts;
+                if (path.startsWith('/api/orders')) return { data: demoOrders };
+                if (path.startsWith('/api/admin/payments/stats')) return { successRate: 98, avgProcessing: 3.2, pendingReview: 1 };
+                if (path.startsWith('/api/admin/payment-methods')) return GATEWAYS.map(g => ({ id: g.id, enabled: true }));
+
+                // default demo fallback
+                return { ok: true };
+            }
+
+            if (!(opts.body instanceof FormData) && !headers['Content-Type'])
+                headers['Content-Type'] = 'application/json';
+
+            if (authToken && !opts.skipAuth)
+                headers['Authorization'] = 'Bearer ' + authToken;
+
+            const response = await fetch(url, { ...opts, headers });
+
+            if (response.status === 401) { logout(); throw new Error('Unauthorized'); }
+
+            const text = await response.text();
+            let data;
+            try { data = JSON.parse(text); } catch { data = text; }
+
+            if (!response.ok) {
+                const message = typeof data === 'string' ? data : data?.error || `HTTP ${response.status}`;
+                throw new Error(message);
+            }
+
+            return data;
+        }
+
+        /* =========================================================
+           AUTH
+        ========================================================= */
+        async function doLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            const errEl = document.getElementById('loginErr');
+            const btn = document.querySelector('.login-btn');
+
+            errEl.textContent = '';
+
+            if (!user || !pass) { errEl.textContent = 'Please enter username and password'; return; }
+
+            btn.disabled = true;
+            btn.textContent = 'Signing in…';
+
+            // If no API URL is configured, provide a local demo fallback
+            if (!API_URL) {
+                // demo credentials for local preview only
+                if (user === 'admin' && pass === 'playbeat123') {
+                    authToken = 'demo-token';
+                    localStorage.setItem('pb_admin_token', authToken);
+
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('sidebar-user').textContent = user;
+                    document.getElementById('sidebar-avatar').textContent = user.slice(0, 2).toUpperCase();
+
+                    loadDashboard();
+                    toast('Welcome back ' + user, 'ok');
+                } else {
+                    errEl.textContent = 'No API URL configured. Set API Base URL in Settings or use demo credentials: admin / playbeat123';
+                }
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+                return;
+            }
+
+            try {
+                const data = await apiFetch('/api/auth/login', {
+                    method: 'POST',
+                    skipAuth: true,
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                authToken = data.token;
+                localStorage.setItem('pb_admin_token', authToken);
+
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('sidebar-user').textContent = data.username || user;
+                document.getElementById('sidebar-avatar').textContent = (data.username || user).slice(0, 2).toUpperCase();
+
+                loadDashboard();
+                toast('Welcome back ' + (data.username || user), 'ok');
+            }
+            catch (e) { errEl.textContent = e.message; }
+            finally { btn.disabled = false; btn.textContent = 'Sign In'; }
+        }
+
+        async function verifyToken() {
+            if (!authToken) return false;
+            try {
+                const data = await apiFetch('/api/auth/verify', { method: 'POST' });
+                return data.ok === true;
+            } catch { return false; }
+        }
+
+        function logout() {
+            authToken = '';
+            localStorage.removeItem('pb_admin_token');
+            location.reload();
+        }
+
+        /* =========================================================
+           CONFIG
+        ========================================================= */
+        function saveApiConfig() {
+            const urlInput = document.getElementById('cfg-api-url').value.trim().replace(/\/+$/, '');
+            const userInput = document.getElementById('cfg-username').value.trim();
+
+            cfg.apiUrl = urlInput;
+            cfg.username = userInput;
+            localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+
+            if (urlInput) API_URL = urlInput;
+
+            const msg = document.getElementById('cfg-msg');
+            msg.style.color = 'var(--green)';
+            msg.textContent = '✓ Config saved';
+            setTimeout(() => { msg.textContent = ''; }, 3000);
+        }
+
+        async function testApiConnection() {
+            const msg = document.getElementById('cfg-msg');
+            msg.textContent = 'Testing...';
+            try {
+                const res = await fetch(API_URL + '/api/health');
+                const data = await res.json();
+                msg.style.color = 'var(--green)';
+                msg.textContent = `✓ Connected · DB ${data.db}`;
+            } catch {
+                msg.style.color = 'var(--red)';
+                msg.textContent = 'Connection failed';
+            }
+        }
+
+        function loadApiConfig() {
+            if (cfg.apiUrl) document.getElementById('cfg-api-url').value = cfg.apiUrl;
+            if (cfg.username) document.getElementById('cfg-username').value = cfg.username;
+        }
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+        function fmt(n) {
+            return '₨ ' + Number(n || 0).toLocaleString('en-PK');
+        }
+
+        function statusPill(status) {
+            const map = {
+                pending: 'pill-amber',
+                processing: 'pill-blue',
+                delivered: 'pill-green',
+                cancelled: 'pill-red',
+                refunded: 'pill-red',
+                failed: 'pill-red'
+            };
+            return `<span class="pill ${map[status] || 'pill-accent'}">${status || '—'}</span>`;
+        }
+
+        function relativeTime(dateStr) {
+            const diff = (Date.now() - new Date(dateStr)) / 1000;
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return Math.floor(diff / 86400) + 'd ago';
+        }
+
+        /* =========================================================
+           DASHBOARD
+        ========================================================= */
+        async function loadDashboard() {
+            try {
+                const data = await apiFetch('/api/stats');
+
+                document.getElementById('m-revenue').textContent = fmt(data.revenue.total);
+                document.getElementById('m-rev-today').textContent = 'Today: ' + fmt(data.revenue.today);
+                document.getElementById('m-orders').textContent = (data.orders.total || 0).toLocaleString();
+                document.getElementById('m-orders-week').textContent = data.orders.weekCount + ' this week';
+                document.getElementById('m-pending').textContent = data.orders.pending;
+                document.getElementById('m-processing').textContent = data.orders.processing + ' processing';
+                document.getElementById('m-lowstock').textContent = data.products.lowStock;
+
+                const lowBadge = document.getElementById('badge-lowstock');
+                const pendingBadge = document.getElementById('badge-pending');
+                if (lowBadge) lowBadge.textContent = data.products.lowStock;
+                if (pendingBadge) pendingBadge.textContent = data.orders.pending;
+
+                /* ALERT BAR */
+                const alerts = [];
+                if (data.orders.pending > 0) alerts.push(data.orders.pending + ' pending deliveries');
+                if (data.products.lowStock > 0) alerts.push(data.products.lowStock + ' low stock items');
+
+                const alertBar = document.getElementById('dash-alert');
+                if (alertBar) {
+                    if (alerts.length) {
+                        alertBar.style.display = 'flex';
+                        document.getElementById('dash-alert-text').textContent = alerts.join(', ') + ' — attention required';
+                    } else {
+                        alertBar.style.display = 'none';
+                    }
+                }
+
+                /* RECENT ORDERS */
+                const ordTbl = document.getElementById('dash-orders-table');
+                ordTbl.innerHTML =
+                    `<tr><th>Order</th><th>Product</th><th>Method</th><th>Status</th></tr>` +
+                    (data.recent || []).slice(0, 7).map(o => `
+                        <tr>
+                            <td class="mono">${o.orderId}</td>
+                            <td>${(o.items || []).map(i => i.productName).join(', ')}</td>
+                            <td>${o.payment?.method || '—'}</td>
+                            <td>${statusPill(o.status)}</td>
+                        </tr>
+                    `).join('');
+
+                /* PAYMENT BREAKDOWN */
+                const colors = { jazzcash: '#22d68a', easypaisa: '#4fa0ff', stripe: '#7c6cff', ibft: '#f5a623' };
+                const total = (data.paymentBreakdown || []).reduce((s, v) => s + v.count, 0) || 1;
+                const bars = document.getElementById('dash-payment-bars');
+
+                bars.innerHTML = (data.paymentBreakdown || []).map(p => {
+                    const pct = Math.round(p.count / total * 100);
+                    return `
+                        <div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px">
+                                <span>${p._id}</span><span>${pct}%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width:${pct}%;background:${colors[p._id] || '#888'}"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                /* TOP PRODUCTS */
+                const top = document.getElementById('dash-top-products');
+                top.innerHTML =
+                    `<tr><th>Product</th><th>Category</th><th>Sold</th></tr>` +
+                    (data.topProducts || []).map(p => `
+                        <tr>
+                            <td>${p.name}</td>
+                            <td><span class="pill pill-accent">${p.category}</span></td>
+                            <td class="mono">${(p.sold || 0).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+            }
+            catch (e) { toast('Dashboard load failed: ' + e.message, 'err'); }
+        }
+
+        /* =========================================================
+           INVENTORY
+        ========================================================= */
+        async function loadInventory() {
+            try {
+                allProducts = await apiFetch('/api/admin/products?limit=200');
+                renderInventory(allProducts);
+            }
+            catch (e) { toast('Inventory load failed: ' + e.message, 'err'); }
+        }
+
+        function renderInventory(products) {
+            document.getElementById('inv-total').textContent = products.length;
+            document.getElementById('inv-active').textContent = products.filter(p => p.active !== false).length;
+            document.getElementById('inv-low').textContent = products.filter(p => p.stock <= 10 && p.stock > 0).length;
+            document.getElementById('inv-out').textContent = products.filter(p => p.stock === 0).length;
+            document.getElementById('inv-count').textContent = products.length + ' products';
+
+            document.getElementById('inv-tbody').innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.name}</td>
+                    <td><span class="pill pill-accent">${p.category}</span></td>
+                    <td class="mono">${fmt(p.price)}</td>
+                    <td class="mono">${p.sale ? fmt(p.sale) : '—'}</td>
+                    <td>${p.stock}</td>
+                    <td>${(p.sold || 0).toLocaleString()}</td>
+                    <td>${p.active !== false ? '<span class="pill pill-green">Active</span>' : '<span class="pill pill-red">Hidden</span>'}</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="openEditProduct('${p.id}')">Edit</button>
+                        <button class="btn btn-sm" onclick="openAddKeys('${p.id}','${(p.name || '').replace(/'/g, '')}')">Keys</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        /* =========================================================
+           ORDERS
+        ========================================================= */
+        async function loadOrders() {
+            try {
+                const result = await apiFetch('/api/orders?limit=200');
+                const orders = result.data || [];
+
+                document.getElementById('orders-tbody').innerHTML = orders.map(o => `
+                    <tr>
+                        <td class="mono">${o.orderId}</td>
+                        <td>${o.customer?.name || '—'}</td>
+                        <td class="mono">${fmt(o.total)}</td>
+                        <td>${o.payment?.method || '—'}</td>
+                        <td>${statusPill(o.status)}</td>
+                        <td>${relativeTime(o.createdAt)}</td>
+                        <td><button class="btn btn-sm" onclick="viewOrder('${o.orderId}')">View</button></td>
+                    </tr>
+                `).join('');
+            }
+            catch (e) { toast('Orders load failed: ' + e.message, 'err'); }
+        }
+
+        /* =========================================================
+           ORDER DETAIL MODAL
+        ========================================================= */
+        function createActionBtn(text, onClick, btnClass = 'btn') {
+            const btn = document.createElement('button');
+            btn.className = btnClass + ' btn-sm';
+            btn.textContent = text;
+            btn.onclick = () => {
+                btn.disabled = true;
+                Promise.resolve(onClick()).finally(() => { btn.disabled = false; });
+            };
+            return btn;
+        }
+
+        async function viewOrder(orderId) {
+            try {
+                const data = await apiFetch('/api/orders/' + encodeURIComponent(orderId));
+                const body = document.getElementById('modal-order-body');
+
+                body.innerHTML = `
+                    <div><strong>Order ID:</strong> <span class="mono">${data.orderId}</span></div>
+                    <div style="margin-top:8px"><strong>Status:</strong> ${statusPill(data.status)}</div>
+                    <div style="margin-top:8px"><strong>Customer:</strong> ${data.customer?.name || '—'}</div>
+                    <div>${data.customer?.email || '—'}</div>
+                    <div>${data.customer?.phone || '—'}</div>
+                    <div style="margin-top:8px"><strong>Total:</strong> ${fmt(data.total)}</div>
+                    <div><strong>Payment:</strong> ${data.payment?.method || '—'}</div>
+                    <div><strong>Payment Status:</strong> ${data.payment?.status || '—'}</div>
+                    <hr style="margin:12px 0;border-color:var(--border)">
+                    <div style="font-weight:600">Items</div>
+                    ${(data.items || []).map(i => `
+                        <div style="display:flex;justify-content:space-between;margin-top:6px">
+                            <span>${i.productName} ×${i.qty}</span>
+                            <span class="mono">${fmt(i.qty * i.price)}</span>
+                        </div>
+                    `).join('')}
+                    ${data.notes ? `<div style="margin-top:12px;color:var(--text3)">${data.notes}</div>` : ''}
+                `;
+
+                const actions = document.getElementById('order-actions');
+                actions.innerHTML = '';
+
+                if (data.status === 'pending') {
+                    actions.appendChild(createActionBtn('Confirm Payment',
+                        () => updateOrderStatus(data.orderId, 'processing', 'confirmed'), 'btn btn-primary'));
+                    actions.appendChild(createActionBtn('Cancel',
+                        () => updateOrderStatus(data.orderId, 'cancelled', 'failed'), 'btn btn-danger'));
+                }
+
+                if (data.status === 'processing') {
+                    actions.appendChild(createActionBtn('Mark Delivered',
+                        () => updateOrderStatus(data.orderId, 'delivered', 'confirmed'), 'btn btn-primary'));
+                }
+
+                openModal('modal-order');
+            }
+            catch (e) { toast('Order load failed: ' + e.message, 'err'); }
+        }
+
+        async function updateOrderStatus(orderId, status, paymentStatus) {
+            try {
+                await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status, paymentStatus })
+                });
+                toast('Order updated', 'ok');
+                closeModal('modal-order');
+                loadOrders();
+                loadDashboard();
+            }
+            catch (e) { toast(e.message, 'err'); }
+        }
+
+        /* =========================================================
+           PRODUCT MODAL
+        ========================================================= */
+        function openAddProduct() {
+            editingProductId = null;
+            document.getElementById('modal-product-title').textContent = 'Add Product';
+
+            ['p-id', 'p-name', 'p-desc', 'p-price', 'p-sale', 'p-stock', 'p-badge', 'p-img']
+                .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+            document.getElementById('p-id').disabled = false;
+            document.getElementById('p-cat').value = 'games';
+            document.getElementById('p-featured').checked = false;
+            document.getElementById('p-active').checked = true;
+            document.getElementById('modal-product-err').textContent = '';
+            openModal('modal-product');
+        }
+
+        function openEditProduct(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            editingProductId = id;
+            document.getElementById('modal-product-title').textContent = 'Edit Product';
+
+            document.getElementById('p-id').value = product.id;
+            document.getElementById('p-id').disabled = true;
+            document.getElementById('p-name').value = product.name || '';
+            document.getElementById('p-desc').value = product.desc || '';
+            document.getElementById('p-cat').value = product.category || 'games';
+            document.getElementById('p-price').value = product.price || '';
+            document.getElementById('p-sale').value = product.sale || '';
+            document.getElementById('p-stock').value = product.stock || 0;
+            document.getElementById('p-badge').value = product.badge || '';
+            document.getElementById('p-img').value = product.img || '';
+            document.getElementById('p-featured').checked = !!product.featured;
+            document.getElementById('p-active').checked = product.active !== false;
+
+            openModal('modal-product');
+        }
+
+        async function saveProduct() {
+            const errEl = document.getElementById('modal-product-err');
+            errEl.textContent = '';
+
+            const body = {
+                id: document.getElementById('p-id').value.trim(),
+                name: document.getElementById('p-name').value.trim(),
+                category: document.getElementById('p-cat').value,
+                price: parseFloat(document.getElementById('p-price').value),
+                sale: parseFloat(document.getElementById('p-sale').value) || null,
+                stock: parseInt(document.getElementById('p-stock').value) || 0,
+                badge: document.getElementById('p-badge').value.trim(),
+                desc: document.getElementById('p-desc').value.trim(),
+                img: document.getElementById('p-img').value.trim(),
+                featured: document.getElementById('p-featured').checked,
+                active: document.getElementById('p-active').checked
+            };
+
+            if (!body.name || !body.price) { errEl.textContent = 'Name and price required'; return; }
+
+            try {
+                if (editingProductId) {
+                    await apiFetch('/api/products/' + editingProductId, {
+                        method: 'PUT', body: JSON.stringify(body)
+                    });
+                } else {
+                    if (!body.id) { errEl.textContent = 'Product ID required'; return; }
+                    await apiFetch('/api/products', { method: 'POST', body: JSON.stringify(body) });
+                }
+                closeModal('modal-product');
+                toast('Product saved', 'ok');
+                loadInventory();
+            }
+            catch (e) { errEl.textContent = e.message; }
+        }
+
+        async function deactivateProduct(id) {
+            if (!confirm('Deactivate product?')) return;
+            try {
+                await apiFetch('/api/products/' + id, { method: 'DELETE' });
+                toast('Product deactivated', 'ok');
+                loadInventory();
+            }
+            catch (e) { toast(e.message, 'err'); }
+        }
+
+        /* =========================================================
+           DELIVERY KEYS
+        ========================================================= */
+        function openAddKeys(productId, productName) {
+            keysProductId = productId;
+            document.getElementById('modal-keys-title').textContent = 'Add Keys — ' + productName;
+            document.getElementById('keys-input').value = '';
+            document.getElementById('modal-keys-err').textContent = '';
+            openModal('modal-keys');
+        }
+
+        async function submitKeys() {
+            const errEl = document.getElementById('modal-keys-err');
+            errEl.textContent = '';
+
+            const raw = document.getElementById('keys-input').value.trim();
+            if (!raw) { errEl.textContent = 'Paste at least one key'; return; }
+
+            const keys = raw.split('\n').map(v => v.trim()).filter(Boolean);
+
+            try {
+                const data = await apiFetch(`/api/products/${keysProductId}/keys`, {
+                    method: 'POST', body: JSON.stringify({ keys })
+                });
+                closeModal('modal-keys');
+                toast(`${data.keysAdded} keys added`, 'ok');
+                loadInventory();
+            }
+            catch (e) { errEl.textContent = e.message; }
+        }
+
+        /* =========================================================
+           PAYMENTS
+           — tries dedicated endpoints, falls back to /api/stats
+        ========================================================= */
+        const GATEWAYS = [
+            { id: 'jazzcash', label: 'JazzCash', color: '#22d68a', icon: 'ti-device-mobile' },
+            { id: 'easypaisa', label: 'Easypaisa', color: '#4fa0ff', icon: 'ti-device-mobile' },
+            { id: 'ibft', label: 'IBFT', color: '#f5a623', icon: 'ti-building-bank' },
+            { id: 'stripe', label: 'Stripe', color: '#7c6cff', icon: 'ti-credit-card' }
+        ];
+
+        // in-memory gateway config state
+        let _gwConfig = {};
+
+        async function loadPayments() {
+            // ---- Stats metrics ----
+            try {
+                const stats = await apiFetch('/api/admin/payments/stats');
+                document.getElementById('pay-success-rate').textContent = (stats.successRate != null) ? stats.successRate + '%' : '—';
+                document.getElementById('pay-avg-processing').textContent = (stats.avgProcessing != null) ? stats.avgProcessing + 's' : '—';
+                document.getElementById('pay-pending-review').textContent = (stats.pendingReview != null) ? stats.pendingReview : '—';
+            } catch {
+                // fallback: derive from /api/stats
+                try {
+                    const s = await apiFetch('/api/stats');
+                    document.getElementById('pay-success-rate').textContent = '—';
+                    document.getElementById('pay-avg-processing').textContent = '—';
+                    document.getElementById('pay-pending-review').textContent = s.orders?.pending ?? '—';
+                } catch { /* silent */ }
+            }
+
+            // ---- Gateway toggles & config ----
+            try {
+                const methods = await apiFetch('/api/admin/payment-methods');
+                // methods expected: [{ id, enabled, merchantId, apiKey, ... }, ...]
+                for (const m of methods) _gwConfig[m.id] = m;
+            } catch {
+                // no endpoint — seed defaults
+                for (const gw of GATEWAYS)
+                    _gwConfig[gw.id] = _gwConfig[gw.id] || { id: gw.id, enabled: true };
+            }
+
+            renderPaymentToggles();
+            renderGatewayCards();
+        }
+
+        function renderPaymentToggles() {
+            const container = document.getElementById('payment-toggles');
+            container.innerHTML = GATEWAYS.map(gw => {
+                const cfg = _gwConfig[gw.id] || {};
+                const enabled = cfg.enabled !== false;
+                return `
+                <div style="
+                    display:flex;align-items:center;gap:12px;
+                    padding:12px 0;border-bottom:1px solid var(--border)
+                ">
+                    <i class="ti ${gw.icon}" style="color:${gw.color};font-size:18px"></i>
+                    <span style="flex:1;font-size:13px;font-weight:500">${gw.label}</span>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text3)">
+                        <span>${enabled ? 'Enabled' : 'Disabled'}</span>
+                        <div class="toggle-track ${enabled ? 'toggle-on' : ''}" onclick="toggleGateway('${gw.id}',this)">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                    </label>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderGatewayCards() {
+            const grid = document.getElementById('gateway-config-grid');
+            grid.innerHTML = GATEWAYS.map(gw => {
+                const cfg = _gwConfig[gw.id] || {};
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title" style="color:${gw.color}">${gw.label}</span>
+                        <span class="pill ${cfg.enabled !== false ? 'pill-green' : 'pill-red'}">
+                            ${cfg.enabled !== false ? 'Active' : 'Disabled'}
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Merchant / Store ID</label>
+                        <input class="form-input" id="gw-mid-${gw.id}"
+                            value="${cfg.merchantId || ''}" placeholder="Enter merchant ID">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key / Password</label>
+                        <input class="form-input" id="gw-key-${gw.id}" type="password"
+                            value="${cfg.apiKey || ''}" placeholder="Enter API key">
+                    </div>
+                    ${gw.id === 'ibft' ? `
+                    <div class="form-group">
+                        <label class="form-label">Account / IBAN</label>
+                        <input class="form-input" id="gw-acct-${gw.id}"
+                            value="${cfg.account || ''}" placeholder="Enter account number">
+                    </div>` : ''}
+                    <button class="btn btn-primary btn-sm" onclick="saveGateway('${gw.id}')">
+                        <i class="ti ti-device-floppy"></i> Save
+                    </button>
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleGateway(id, trackEl) {
+            const cfg = _gwConfig[id] || {};
+            const newVal = !(cfg.enabled !== false);
+            _gwConfig[id] = { ...cfg, enabled: newVal };
+
+            // optimistic UI
+            trackEl.classList.toggle('toggle-on', newVal);
+            trackEl.previousElementSibling.textContent = newVal ? 'Enabled' : 'Disabled';
+            renderGatewayCards();
+
+            try {
+                await apiFetch(`/api/admin/payment-methods/${id}/toggle`, {
+                    method: 'PUT', body: JSON.stringify({ enabled: newVal })
+                });
+                toast(`${id} ${newVal ? 'enabled' : 'disabled'}`, 'ok');
+            } catch {
+                toast('Toggle saved locally only (endpoint not found)', 'info');
+            }
+        }
+
+        async function saveGateway(id) {
+            const body = {
+                merchantId: document.getElementById(`gw-mid-${id}`)?.value.trim() || '',
+                apiKey: document.getElementById(`gw-key-${id}`)?.value.trim() || '',
+                account: document.getElementById(`gw-acct-${id}`)?.value.trim() || '',
+                enabled: (_gwConfig[id] || {}).enabled !== false
+            };
+            _gwConfig[id] = { ...(_gwConfig[id] || {}), ...body };
+
+            try {
+                await apiFetch(`/api/admin/payment-methods/${id}/config`, {
+                    method: 'PUT', body: JSON.stringify(body)
+                });
+                toast(`${id} config saved`, 'ok');
+            } catch {
+                toast(`${id} saved locally only (endpoint not found)`, 'info');
+            }
+        }
+
+        async function saveAllGateways() {
+            for (const gw of GATEWAYS) await saveGateway(gw.id);
+            toast('All gateways saved', 'ok');
+        }
+
+        /* =========================================================
+           CUSTOMERS
+           — tries /api/admin/customers first, falls back to
+             aggregating from /api/orders client-side
+        ========================================================= */
+        async function loadCustomers() {
+            try {
+                // Try dedicated endpoint first
+                let list;
+                try {
+                    list = await apiFetch('/api/admin/customers?limit=500');
+                    // normalise field names from dedicated endpoint
+                    list = list.map(c => ({
+                        name: c.name || c.customerName || '—',
+                        email: c.email || '—',
+                        orders: c.orderCount || c.orders || 0,
+                        spent: c.totalSpent || c.spent || 0,
+                        lastOrder: c.lastOrder || c.updatedAt || null
+                    }));
+                } catch {
+                    // Fallback: aggregate from orders
+                    const result = await apiFetch('/api/orders?limit=500');
+                    const orders = result.data || result || [];
+                    const map = {};
+                    for (const o of orders) {
+                        const key = o.customer?.email || o.customer?.phone || 'unknown';
+                        if (!map[key]) {
+                            map[key] = {
+                                name: o.customer?.name || '—',
+                                email: o.customer?.email || key,
+                                orders: 0,
+                                spent: 0,
+                                lastOrder: o.createdAt
+                            };
+                        }
+                        map[key].orders++;
+                        map[key].spent += o.total || 0;
+                        if (new Date(o.createdAt) > new Date(map[key].lastOrder))
+                            map[key].lastOrder = o.createdAt;
+                    }
+                    list = Object.values(map).sort((a, b) => b.spent - a.spent);
+                }
+
+                _custData = list;
+                renderCustomers(_custData);
+            }
+            catch (e) {
+                toast('Customers load failed: ' + e.message, 'err');
+                document.getElementById('cust-tbody').innerHTML =
+                    `<tr><td colspan="5" style="text-align:center;color:var(--red)">${e.message}</td></tr>`;
+            }
+        }
+
+        function renderCustomers(list) {
+            document.getElementById('cust-count').textContent = list.length + ' unique customers';
+            document.getElementById('cust-tbody').innerHTML = list.length
+                ? list.map(c => `
+                    <tr>
+                        <td>${c.name || '—'}</td>
+                        <td>${c.email || '—'}</td>
+                        <td>${c.orders || 0}</td>
+                        <td class="mono">${fmt(c.spent)}</td>
+                        <td>${c.lastOrder ? relativeTime(c.lastOrder) : '—'}</td>
+                    </tr>
+                `).join('')
+                : `<tr><td colspan="5" style="text-align:center;color:var(--text3)">No customers found.</td></tr>`;
+        }
+
+        function filterCustomers() {
+            const q = document.getElementById('cust-search').value.toLowerCase();
+            renderCustomers(_custData.filter(c =>
+                (c.name || '').toLowerCase().includes(q) ||
+                (c.email || '').toLowerCase().includes(q)
+            ));
+        }
+
+        /* =========================================================
+           CHANNELS  (stub)
+        ========================================================= */
+        function loadChannels() {
+            document.getElementById('channels-content').innerHTML = `
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Sales Channels</span></div>
+                    <p style="color:var(--text3);font-size:13px">No channels configured.</p>
+                </div>
+            `;
+        }
+
+        /* =========================================================
+           AI PROMPT  (stub)
+        ========================================================= */
+        function copyPrompt() {
+            const text = document.getElementById('prompt-text').textContent;
+            navigator.clipboard.writeText(text).then(() => toast('Copied', 'ok'));
+        }
+
+        /* =========================================================
+           SEED  (stub)
+        ========================================================= */
+        function seedFromProductsJS() {
+            toast('Seed function not implemented yet', 'info');
+        }
+
+        /* =========================================================
+           STARTUP
+        ========================================================= */
+        (async () => {
+            loadApiConfig();
+
+            if (authToken && await verifyToken()) {
+                document.getElementById('loginScreen').style.display = 'none';
+                loadDashboard();
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+            }
+        })();
+    </script>
+
+</body>
+
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>PlayBeat Admin Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #020305;
+            --bg2: #07111d;
+            --bg3: #0d1624;
+            --bg4: #121c2c;
+
+            --border: rgba(192, 192, 192, .15);
+            --border2: rgba(212, 175, 55, .3);
+
+            --text: #e8edf5;
+            --text2: #b8c2d0;
+            --text3: #6a7a8e;
+
+            --accent: #d4af37;
+            --accent2: #b8941f;
+            --accent-glow: rgba(212, 175, 55, .15);
+
+            --silver: #c0c0c0;
+
+            --green: #22d68a;
+            --green-bg: rgba(34, 214, 138, .1);
+
+            --amber: #f5a623;
+            --amber-bg: rgba(245, 166, 35, .1);
+
+            --red: #ff5a5a;
+            --red-bg: rgba(255, 90, 90, .1);
+
+            --blue: #4fa0ff;
+            --blue-bg: rgba(79, 160, 255, .1);
+
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(212, 175, 55, .08), transparent 25%),
+                radial-gradient(circle at top left, rgba(192, 192, 192, .05), transparent 20%),
+                var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* LOGIN */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, .92), rgba(10, 8, 2, .90));
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            width: 360px;
+            background: linear-gradient(180deg, #0a0a0a, #141414);
+            border: 1px solid rgba(212, 175, 55, .35);
+            border-radius: 20px;
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: center;
+            box-shadow: 0 0 60px rgba(212, 175, 55, .18), 0 0 120px rgba(0, 0, 0, .8);
+        }
+
+        .login-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+        }
+
+        .login-card h2 {
+            color: var(--accent);
+            font-size: 26px;
+        }
+
+        .login-card p {
+            color: var(--text3);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 13px 16px;
+            background: #050505;
+            color: var(--text);
+            border: 1px solid rgba(212, 175, 55, .25);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .login-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, .2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #8b6b14, #d4af37, #f4d06f);
+            color: #000;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .login-err {
+            color: var(--red);
+            min-height: 16px;
+            font-size: 12px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #05080f, #0a1320);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-shadow: inset -1px 0 0 rgba(212, 175, 55, .15);
+        }
+
+        .logo {
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid rgba(212, 175, 55, .12);
+        }
+
+        .logo-mark {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-bolt {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+        }
+
+        .logo-name {
+            font-size: 15px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #f4d06f, #fff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .logo-sub {
+            font-size: 10px;
+            margin-left: 36px;
+            color: var(--text3);
+            text-transform: uppercase;
+        }
+
+        nav {
+            flex: 1;
+            overflow: auto;
+            padding: 10px 0;
+        }
+
+        .nav-label {
+            padding: 12px 16px 4px;
+            color: var(--text3);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 1px 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text2);
+            font-size: 13px;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(212, 175, 55, .08);
+        }
+
+        .nav-item.active {
+            background: rgba(212, 175, 55, .12);
+            color: #f1d27a;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: var(--accent);
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--red);
+            color: #fff;
+            border-radius: 20px;
+            padding: 1px 6px;
+            font-size: 10px;
+        }
+
+        .sidebar-footer {
+            padding: 12px 8px;
+            border-top: 1px solid rgba(212, 175, 55, .12);
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-name {
+            font-size: 13px;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text3);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .content {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .section.active {
+            display: flex;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, .12);
+            background: linear-gradient(180deg, #08111d, #101a2b);
+        }
+
+        .topbar-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* GRID */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media(max-width:1200px) {
+
+            .grid-4,
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* METRIC */
+        .metric {
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #08111d, #101a2b);
+            border: 1px solid rgba(192, 192, 192, .12);
+        }
+
+        .metric-label {
+            color: var(--text3);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .metric-delta {
+            margin-top: 4px;
+            font-size: 11px;
+        }
+
+        .delta-up {
+            color: var(--green);
+        }
+
+        .delta-down {
+            color: var(--red);
+        }
+
+        .delta-flat {
+            color: var(--text3);
+        }
+
+        /* CARD */
+        .card {
+            padding: 18px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #08111d, #101a2b);
+            border: 1px solid rgba(192, 192, 192, .12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-weight: 600;
+        }
+
+        .card-sub {
+            color: var(--text3);
+            font-size: 12px;
+        }
+
+        /* ALERT */
+        .alert-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 10px;
+            background: var(--amber-bg);
+            color: var(--amber);
+            margin-bottom: 16px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text3);
+            font-weight: 500;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(192, 192, 192, .06);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(212, 175, 55, .04);
+        }
+
+        /* PILLS */
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .pill-green {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .pill-red {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .pill-amber {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        .pill-blue {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
+
+        .pill-accent {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, .05);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent2);
+            border-color: var(--accent2);
+        }
+
+        .btn-danger {
+            background: var(--red-bg);
+            color: var(--red);
+            border-color: var(--red);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text3);
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 9px 12px;
+            background: var(--bg3);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(180deg, #0c1828, #111f32);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 24px;
+            width: 480px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text3);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-err {
+            color: var(--red);
+            font-size: 12px;
+            min-height: 16px;
+            margin-top: 8px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+
+        /* BAR CHART */
+        .bar-track {
+            height: 6px;
+            background: var(--bg4);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .4s;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            color: var(--text);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity .25s, transform .25s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.ok {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .toast.err {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .toast.info {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* MONO */
+        .mono {
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        /* TOGGLE SWITCH */
+        .toggle-track {
+            width: 36px;
+            height: 20px;
+            border-radius: 20px;
+            background: var(--bg4);
+            border: 1px solid var(--border);
+            position: relative;
+            transition: background .2s, border-color .2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .toggle-track.toggle-on {
+            background: var(--green-bg);
+            border-color: var(--green);
+        }
+
+        .toggle-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--text3);
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform .2s, background .2s;
+        }
+
+        .toggle-on .toggle-thumb {
+            transform: translateX(16px);
+            background: var(--green);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <img src="logo.png" alt="logo">
+            <h2>PlayBeat</h2>
+            <p>Digital Store Administration</p>
+            <input id="loginUser" class="login-input" placeholder="Username">
+            <input id="loginPass" type="password" class="login-input" placeholder="Password">
+            <div id="loginErr" class="login-err"></div>
+            <button class="login-btn" onclick="doLogin()">Sign In</button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="logo">
+            <div class="logo-mark">
+                <div class="logo-bolt">⚡</div>
+                <div class="logo-name">PlayBeat</div>
+            </div>
+            <div class="logo-sub">Admin Console</div>
+        </div>
+
+        <nav>
+            <div class="nav-label">Overview</div>
+
+            <div class="nav-item active" onclick="show('dashboard',this)">
+                <i class="ti ti-layout-dashboard"></i>
+                Dashboard
+            </div>
+
+            <div class="nav-item" onclick="show('inventory',this)">
+                <i class="ti ti-package"></i>
+                Inventory
+            </div>
+
+            <div class="nav-item" onclick="show('orders',this)">
+                <i class="ti ti-shopping-cart"></i>
+                Orders
+                <span class="nav-badge" id="badge-pending">0</span>
+            </div>
+
+            <div class="nav-item" onclick="show('customers',this)">
+                <i class="ti ti-users"></i>
+                Customers
+            </div>
+
+            <div class="nav-item" onclick="show('payments',this)">
+                <i class="ti ti-credit-card"></i>
+                Payments
+            </div>
+
+            <div class="nav-item" onclick="show('channels',this)">
+                <i class="ti ti-world"></i>
+                Channels
+            </div>
+
+            <div class="nav-item" onclick="show('prompt',this)">
+                <i class="ti ti-robot"></i>
+                AI Prompt
+            </div>
+
+            <div class="nav-item" onclick="show('settings',this)">
+                <i class="ti ti-settings"></i>
+                Settings
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-row">
+                <div id="sidebar-avatar" class="avatar">AD</div>
+                <div>
+                    <div class="user-name" id="sidebar-user">Admin</div>
+                    <div class="user-role">Super Admin</div>
+                </div>
+                <div class="status-dot"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section active">
+
+            <div class="topbar">
+                <div class="topbar-title">Dashboard</div>
+                <button class="btn btn-sm" onclick="loadDashboard()">
+                    <i class="ti ti-refresh"></i> Refresh
+                </button>
+            </div>
+
+            <div class="content">
+
+                <div id="dash-alert" class="alert-bar" style="display:none">
+                    <i class="ti ti-alert-triangle"></i>
+                    <span id="dash-alert-text"></span>
+                </div>
+
+                <div class="grid-4">
+                    <div class="metric">
+                        <div class="metric-label">Total Revenue (PKR)</div>
+                        <div class="metric-value" id="m-revenue">—</div>
+                        <div class="metric-delta delta-flat" id="m-rev-today">loading…</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Total Orders</div>
+                        <div class="metric-value" id="m-orders">—</div>
+                        <div class="metric-delta delta-flat" id="m-orders-week">loading…</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Pending Delivery</div>
+                        <div class="metric-value" id="m-pending" style="color:var(--amber)">—</div>
+                        <div class="metric-delta delta-down" id="m-processing"></div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Low Stock Items</div>
+                        <div class="metric-value" id="m-lowstock" style="color:var(--red)">—</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Recent Orders</span>
+                        </div>
+                        <table id="dash-orders-table">
+                            <tr>
+                                <td colspan="4" style="text-align:center;padding:20px">Loading...</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Payment Breakdown</span>
+                            <span class="card-sub">This month</span>
+                        </div>
+                        <div id="dash-payment-bars"></div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Top Products</span>
+                        </div>
+                        <table id="dash-top-products">
+                            <tr>
+                                <td colspan="3">Loading...</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Quick Actions</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:8px">
+                            <button class="btn" onclick="openAddProduct()">
+                                <i class="ti ti-plus"></i> Add Product
+                            </button>
+                            <button class="btn" onclick="seedFromProductsJS()">
+                                <i class="ti ti-database-import"></i> Seed products.js
+                            </button>
+                            <button class="btn" onclick="show('orders')">
+                                <i class="ti ti-shopping-cart"></i> View Orders
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- INVENTORY -->
+        <div id="inventory" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Inventory</div>
+                <button class="btn btn-primary" onclick="openAddProduct()">
+                    <i class="ti ti-plus"></i> Add Product
+                </button>
+            </div>
+
+            <div class="content">
+
+                <div class="grid-4">
+                    <div class="metric">
+                        <div class="metric-label">Products</div>
+                        <div class="metric-value" id="inv-total">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Active</div>
+                        <div class="metric-value" id="inv-active">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Low Stock</div>
+                        <div class="metric-value" id="inv-low">0</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Out of Stock</div>
+                        <div class="metric-value" id="inv-out">0</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Product Inventory</span>
+                        <span id="inv-count" class="card-sub">Loading...</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Sale</th>
+                                <th>Stock</th>
+                                <th>Sold</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inv-tbody">
+                            <tr>
+                                <td colspan="8" style="text-align:center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div id="orders" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Orders</div>
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Order Management</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr>
+                                <td colspan="7">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAYMENTS -->
+        <div id="payments" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Payment Methods & Gateway Configuration</div>
+                <button class="btn btn-primary" onclick="saveAllGateways()">Save All</button>
+            </div>
+
+            <div class="content">
+
+                <div class="grid-3">
+                    <div class="metric">
+                        <div class="metric-label">Success Rate</div>
+                        <div class="metric-value" id="pay-success-rate">—</div>
+                        <div id="pay-success-delta"></div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Avg Processing</div>
+                        <div class="metric-value" id="pay-avg-processing">—</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Pending Review</div>
+                        <div class="metric-value" id="pay-pending-review">—</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Active Payment Methods</span>
+                    </div>
+                    <div id="payment-toggles"></div>
+                </div>
+
+                <div class="grid-2" id="gateway-config-grid"></div>
+
+            </div>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div id="customers" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Customers</div>
+                <input type="search" id="cust-search" class="form-input" style="width:220px" placeholder="Search..."
+                    oninput="filterCustomers()">
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Customer List</span>
+                        <span id="cust-count" class="card-sub">—</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Orders</th>
+                                <th>Spent</th>
+                                <th>Last Order</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cust-tbody">
+                            <tr>
+                                <td colspan="5">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHANNELS -->
+        <div id="channels" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Sales Channels</div>
+            </div>
+
+            <div class="content" id="channels-content">
+                <!-- populated by loadChannels() -->
+            </div>
+        </div>
+
+        <!-- AI PROMPT -->
+        <div id="prompt" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">AI System Prompt</div>
+                <button class="btn" onclick="copyPrompt()">
+                    <i class="ti ti-copy"></i> Copy
+                </button>
+            </div>
+
+            <div class="content">
+                <div id="prompt-text" class="card" style="
+                    white-space:pre-wrap;
+                    font-family:var(--font-mono);
+                    max-height:600px;
+                    overflow:auto;
+                "></div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settings" class="section">
+
+            <div class="topbar">
+                <div class="topbar-title">Settings</div>
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">API Configuration</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Base URL</label>
+                        <input id="cfg-api-url" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Admin Username</label>
+                        <input id="cfg-username" class="form-input">
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:12px">
+                        <button class="btn btn-primary" onclick="saveApiConfig()">Save Config</button>
+                        <button class="btn" onclick="testApiConnection()">Test Connection</button>
+                    </div>
+                    <div id="cfg-msg" style="margin-top:12px;font-size:12px"></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main -->
+
+    <!-- MODAL: PRODUCT -->
+    <div id="modal-product" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-product-title">Add Product</span>
+                <button class="modal-close" onclick="closeModal('modal-product')">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Product ID</label>
+                <input id="p-id" class="form-input" placeholder="e.g. xbox-gamepass-1m">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input id="p-name" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select id="p-cat" class="form-input">
+                    <option value="games">Games</option>
+                    <option value="giftcards">Gift Cards</option>
+                    <option value="subscriptions">Subscriptions</option>
+                    <option value="software">Software</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div class="form-group">
+                    <label class="form-label">Price (PKR)</label>
+                    <input id="p-price" class="form-input" type="number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sale Price</label>
+                    <input id="p-sale" class="form-input" type="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Stock</label>
+                <input id="p-stock" class="form-input" type="number" value="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Badge</label>
+                <input id="p-badge" class="form-input" placeholder="e.g. HOT, NEW">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Image URL</label>
+                <input id="p-img" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea id="p-desc" class="form-input" rows="3" style="resize:vertical"></textarea>
+            </div>
+            <div style="display:flex;gap:16px;margin-bottom:8px;font-size:13px">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                    <input type="checkbox" id="p-featured"> Featured
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                    <input type="checkbox" id="p-active" checked> Active
+                </label>
+            </div>
+            <div class="modal-err" id="modal-product-err"></div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-product')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: KEYS -->
+    <div id="modal-keys" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-keys-title">Add Keys</span>
+                <button class="modal-close" onclick="closeModal('modal-keys')">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Keys (one per line)</label>
+                <textarea id="keys-input" class="form-input" rows="10"
+                    style="resize:vertical;font-family:var(--font-mono);font-size:12px"
+                    placeholder="XXXX-XXXX-XXXX&#10;YYYY-YYYY-YYYY"></textarea>
+            </div>
+            <div class="modal-err" id="modal-keys-err"></div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('modal-keys')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitKeys()">Add Keys</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ORDER -->
+    <div id="modal-order" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Order Detail</span>
+                <button class="modal-close" onclick="closeModal('modal-order')">✕</button>
+            </div>
+            <div id="modal-order-body"></div>
+            <div class="modal-footer" id="order-actions"></div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        /* =========================================================
+           GLOBALS
+        ========================================================= */
+        let cfg = JSON.parse(localStorage.getItem('pb_admin_cfg') || '{}');
+
+        // base API URL used by apiFetch; populate from saved config if available
+        let API_URL = (cfg && cfg.apiUrl) ? cfg.apiUrl : '';
+
+        let authToken = localStorage.getItem('pb_admin_token') || '';
+
+        const CFG_KEY = 'pb_admin_cfg';
+
+        let allProducts = [];
+        let editingProductId = null;
+        let keysProductId = null;
+        let _custData = [];
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+        function toast(msg, type = 'info') {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            el.className = 'toast';
+            if (type === 'ok') el.classList.add('ok');
+            else if (type === 'err') el.classList.add('err');
+            else el.classList.add('info');
+            el.textContent = msg;
+            requestAnimationFrame(() => { el.classList.add('show'); });
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => { el.classList.remove('show'); }, 3500);
+        }
+
+        /* =========================================================
+           MODALS
+        ========================================================= */
+        function openModal(id) { document.getElementById(id)?.classList.add('open'); }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('open'); }
+
+        /* =========================================================
+           SECTION NAVIGATION
+        ========================================================= */
+        function show(sectionId, navEl) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId)?.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (navEl) navEl.classList.add('active');
+
+            switch (sectionId) {
+                case 'dashboard': loadDashboard(); break;
+                case 'inventory': loadInventory(); break;
+                case 'orders': loadOrders(); break;
+                case 'payments': loadPayments(); break;
+                case 'customers': loadCustomers(); break;
+                case 'channels': loadChannels(); break;
+            }
+        }
+
+        /* =========================================================
+           API HELPER
+        ========================================================= */
+        async function apiFetch(path, opts = {}) {
+            const url = API_URL + path;
+            const headers = { ...(opts.headers || {}) };
+
+            // Demo mode: if API_URL is not configured, return mocked responses
+            if (!API_URL) {
+                // lightweight mock data for UI preview
+                const demoProducts = [
+                    { id: 'p1', name: 'Beat Pack A', category: 'games', price: 499, sale: 399, stock: 12, sold: 120, active: true },
+                    { id: 'p2', name: 'Gift Card 1000', category: 'giftcards', price: 1000, sale: null, stock: 0, sold: 45, active: true },
+                    { id: 'p3', name: 'Subscription Pro', category: 'subscriptions', price: 2999, sale: 2499, stock: 5, sold: 10, active: true }
+                ];
+
+                const demoOrders = [
+                    { orderId: 'ORD-1001', customer: { name: 'Ali' }, total: 1498, payment: { method: 'easypaisa' }, status: 'pending', createdAt: new Date().toISOString() },
+                    { orderId: 'ORD-1002', customer: { name: 'Sara' }, total: 499, payment: { method: 'jazzcash' }, status: 'processing', createdAt: new Date(Date.now()-3600*1000).toISOString() }
+                ];
+
+                const demoStats = {
+                    revenue: { total: 250000, today: 12000 },
+                    orders: { total: 1650, weekCount: 45, pending: 3, processing: 5 },
+                    products: { lowStock: 2 },
+                    recent: demoOrders,
+                    paymentBreakdown: [{ _id: 'easypaisa', count: 30 }, { _id: 'jazzcash', count: 50 }],
+                    topProducts: [{ name: 'Beat Pack A', category: 'games', sold: 120 }]
+                };
+
+                // route the demo responses
+                if (path.startsWith('/api/stats')) return demoStats;
+                if (path.startsWith('/api/admin/products') || path.startsWith('/api/products')) return demoProducts;
+                if (path.startsWith('/api/orders')) return { data: demoOrders };
+                if (path.startsWith('/api/admin/payments/stats')) return { successRate: 98, avgProcessing: 3.2, pendingReview: 1 };
+                if (path.startsWith('/api/admin/payment-methods')) return GATEWAYS.map(g => ({ id: g.id, enabled: true }));
+
+                // default demo fallback
+                return { ok: true };
+            }
+
+            if (!(opts.body instanceof FormData) && !headers['Content-Type'])
+                headers['Content-Type'] = 'application/json';
+
+            if (authToken && !opts.skipAuth)
+                headers['Authorization'] = 'Bearer ' + authToken;
+
+            const response = await fetch(url, { ...opts, headers });
+
+            if (response.status === 401) { logout(); throw new Error('Unauthorized'); }
+
+            const text = await response.text();
+            let data;
+            try { data = JSON.parse(text); } catch { data = text; }
+
+            if (!response.ok) {
+                const message = typeof data === 'string' ? data : data?.error || `HTTP ${response.status}`;
+                throw new Error(message);
+            }
+
+            return data;
+        }
+
+        /* =========================================================
+           AUTH
+        ========================================================= */
+        async function doLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            const errEl = document.getElementById('loginErr');
+            const btn = document.querySelector('.login-btn');
+
+            errEl.textContent = '';
+
+            if (!user || !pass) { errEl.textContent = 'Please enter username and password'; return; }
+
+            btn.disabled = true;
+            btn.textContent = 'Signing in…';
+
+            // If no API URL is configured, provide a local demo fallback
+            if (!API_URL) {
+                // demo credentials for local preview only
+                if (user === 'admin' && pass === 'playbeat123') {
+                    authToken = 'demo-token';
+                    localStorage.setItem('pb_admin_token', authToken);
+
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('sidebar-user').textContent = user;
+                    document.getElementById('sidebar-avatar').textContent = user.slice(0, 2).toUpperCase();
+
+                    loadDashboard();
+                    toast('Welcome back ' + user, 'ok');
+                } else {
+                    errEl.textContent = 'No API URL configured. Set API Base URL in Settings or use demo credentials: admin / playbeat123';
+                }
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+                return;
+            }
+
+            try {
+                const data = await apiFetch('/api/auth/login', {
+                    method: 'POST',
+                    skipAuth: true,
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                authToken = data.token;
+                localStorage.setItem('pb_admin_token', authToken);
+
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('sidebar-user').textContent = data.username || user;
+                document.getElementById('sidebar-avatar').textContent = (data.username || user).slice(0, 2).toUpperCase();
+
+                loadDashboard();
+                toast('Welcome back ' + (data.username || user), 'ok');
+            }
+            catch (e) { errEl.textContent = e.message; }
+            finally { btn.disabled = false; btn.textContent = 'Sign In'; }
+        }
+
+        async function verifyToken() {
+            if (!authToken) return false;
+            try {
+                const data = await apiFetch('/api/auth/verify', { method: 'POST' });
+                return data.ok === true;
+            } catch { return false; }
+        }
+
+        function logout() {
+            authToken = '';
+            localStorage.removeItem('pb_admin_token');
+            location.reload();
+        }
+
+        /* =========================================================
+           CONFIG
+        ========================================================= */
+        function saveApiConfig() {
+            const urlInput = document.getElementById('cfg-api-url').value.trim().replace(/\/+$/, '');
+            const userInput = document.getElementById('cfg-username').value.trim();
+
+            cfg.apiUrl = urlInput;
+            cfg.username = userInput;
+            localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+
+            if (urlInput) API_URL = urlInput;
+
+            const msg = document.getElementById('cfg-msg');
+            msg.style.color = 'var(--green)';
+            msg.textContent = '✓ Config saved';
+            setTimeout(() => { msg.textContent = ''; }, 3000);
+        }
+
+        async function testApiConnection() {
+            const msg = document.getElementById('cfg-msg');
+            msg.textContent = 'Testing...';
+            try {
+                const res = await fetch(API_URL + '/api/health');
+                const data = await res.json();
+                msg.style.color = 'var(--green)';
+                msg.textContent = `✓ Connected · DB ${data.db}`;
+            } catch {
+                msg.style.color = 'var(--red)';
+                msg.textContent = 'Connection failed';
+            }
+        }
+
+        function loadApiConfig() {
+            if (cfg.apiUrl) document.getElementById('cfg-api-url').value = cfg.apiUrl;
+            if (cfg.username) document.getElementById('cfg-username').value = cfg.username;
+        }
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+        function fmt(n) {
+            return '₨ ' + Number(n || 0).toLocaleString('en-PK');
+        }
+
+        function statusPill(status) {
+            const map = {
+                pending: 'pill-amber',
+                processing: 'pill-blue',
+                delivered: 'pill-green',
+                cancelled: 'pill-red',
+                refunded: 'pill-red',
+                failed: 'pill-red'
+            };
+            return `<span class="pill ${map[status] || 'pill-accent'}">${status || '—'}</span>`;
+        }
+
+        function relativeTime(dateStr) {
+            const diff = (Date.now() - new Date(dateStr)) / 1000;
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return Math.floor(diff / 86400) + 'd ago';
+        }
+
+        /* =========================================================
+           DASHBOARD
+        ========================================================= */
+        async function loadDashboard() {
+            try {
+                const data = await apiFetch('/api/stats');
+
+                document.getElementById('m-revenue').textContent = fmt(data.revenue.total);
+                document.getElementById('m-rev-today').textContent = 'Today: ' + fmt(data.revenue.today);
+                document.getElementById('m-orders').textContent = (data.orders.total || 0).toLocaleString();
+                document.getElementById('m-orders-week').textContent = data.orders.weekCount + ' this week';
+                document.getElementById('m-pending').textContent = data.orders.pending;
+                document.getElementById('m-processing').textContent = data.orders.processing + ' processing';
+                document.getElementById('m-lowstock').textContent = data.products.lowStock;
+
+                const lowBadge = document.getElementById('badge-lowstock');
+                const pendingBadge = document.getElementById('badge-pending');
+                if (lowBadge) lowBadge.textContent = data.products.lowStock;
+                if (pendingBadge) pendingBadge.textContent = data.orders.pending;
+
+                /* ALERT BAR */
+                const alerts = [];
+                if (data.orders.pending > 0) alerts.push(data.orders.pending + ' pending deliveries');
+                if (data.products.lowStock > 0) alerts.push(data.products.lowStock + ' low stock items');
+
+                const alertBar = document.getElementById('dash-alert');
+                if (alertBar) {
+                    if (alerts.length) {
+                        alertBar.style.display = 'flex';
+                        document.getElementById('dash-alert-text').textContent = alerts.join(', ') + ' — attention required';
+                    } else {
+                        alertBar.style.display = 'none';
+                    }
+                }
+
+                /* RECENT ORDERS */
+                const ordTbl = document.getElementById('dash-orders-table');
+                ordTbl.innerHTML =
+                    `<tr><th>Order</th><th>Product</th><th>Method</th><th>Status</th></tr>` +
+                    (data.recent || []).slice(0, 7).map(o => `
+                        <tr>
+                            <td class="mono">${o.orderId}</td>
+                            <td>${(o.items || []).map(i => i.productName).join(', ')}</td>
+                            <td>${o.payment?.method || '—'}</td>
+                            <td>${statusPill(o.status)}</td>
+                        </tr>
+                    `).join('');
+
+                /* PAYMENT BREAKDOWN */
+                const colors = { jazzcash: '#22d68a', easypaisa: '#4fa0ff', stripe: '#7c6cff', ibft: '#f5a623' };
+                const total = (data.paymentBreakdown || []).reduce((s, v) => s + v.count, 0) || 1;
+                const bars = document.getElementById('dash-payment-bars');
+
+                bars.innerHTML = (data.paymentBreakdown || []).map(p => {
+                    const pct = Math.round(p.count / total * 100);
+                    return `
+                        <div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px">
+                                <span>${p._id}</span><span>${pct}%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width:${pct}%;background:${colors[p._id] || '#888'}"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                /* TOP PRODUCTS */
+                const top = document.getElementById('dash-top-products');
+                top.innerHTML =
+                    `<tr><th>Product</th><th>Category</th><th>Sold</th></tr>` +
+                    (data.topProducts || []).map(p => `
+                        <tr>
+                            <td>${p.name}</td>
+                            <td><span class="pill pill-accent">${p.category}</span></td>
+                            <td class="mono">${(p.sold || 0).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+            }
+            catch (e) { toast('Dashboard load failed: ' + e.message, 'err'); }
+        }
+
+        /* =========================================================
+           INVENTORY
+        ========================================================= */
+        async function loadInventory() {
+            try {
+                allProducts = await apiFetch('/api/admin/products?limit=200');
+                renderInventory(allProducts);
+            }
+            catch (e) { toast('Inventory load failed: ' + e.message, 'err'); }
+        }
+
+        function renderInventory(products) {
+            document.getElementById('inv-total').textContent = products.length;
+            document.getElementById('inv-active').textContent = products.filter(p => p.active !== false).length;
+            document.getElementById('inv-low').textContent = products.filter(p => p.stock <= 10 && p.stock > 0).length;
+            document.getElementById('inv-out').textContent = products.filter(p => p.stock === 0).length;
+            document.getElementById('inv-count').textContent = products.length + ' products';
+
+            document.getElementById('inv-tbody').innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.name}</td>
+                    <td><span class="pill pill-accent">${p.category}</span></td>
+                    <td class="mono">${fmt(p.price)}</td>
+                    <td class="mono">${p.sale ? fmt(p.sale) : '—'}</td>
+                    <td>${p.stock}</td>
+                    <td>${(p.sold || 0).toLocaleString()}</td>
+                    <td>${p.active !== false ? '<span class="pill pill-green">Active</span>' : '<span class="pill pill-red">Hidden</span>'}</td>
+                    <td>
+                        <button class="btn btn-sm" onclick="openEditProduct('${p.id}')">Edit</button>
+                        <button class="btn btn-sm" onclick="openAddKeys('${p.id}','${(p.name || '').replace(/'/g, '')}')">Keys</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        /* =========================================================
+           ORDERS
+        ========================================================= */
+        async function loadOrders() {
+            try {
+                const result = await apiFetch('/api/orders?limit=200');
+                const orders = result.data || [];
+
+                document.getElementById('orders-tbody').innerHTML = orders.map(o => `
+                    <tr>
+                        <td class="mono">${o.orderId}</td>
+                        <td>${o.customer?.name || '—'}</td>
+                        <td class="mono">${fmt(o.total)}</td>
+                        <td>${o.payment?.method || '—'}</td>
+                        <td>${statusPill(o.status)}</td>
+                        <td>${relativeTime(o.createdAt)}</td>
+                        <td><button class="btn btn-sm" onclick="viewOrder('${o.orderId}')">View</button></td>
+                    </tr>
+                `).join('');
+            }
+            catch (e) { toast('Orders load failed: ' + e.message, 'err'); }
+        }
+
+        /* =========================================================
+           ORDER DETAIL MODAL
+        ========================================================= */
+        function createActionBtn(text, onClick, btnClass = 'btn') {
+            const btn = document.createElement('button');
+            btn.className = btnClass + ' btn-sm';
+            btn.textContent = text;
+            btn.onclick = () => {
+                btn.disabled = true;
+                Promise.resolve(onClick()).finally(() => { btn.disabled = false; });
+            };
+            return btn;
+        }
+
+        async function viewOrder(orderId) {
+            try {
+                const data = await apiFetch('/api/orders/' + encodeURIComponent(orderId));
+                const body = document.getElementById('modal-order-body');
+
+                body.innerHTML = `
+                    <div><strong>Order ID:</strong> <span class="mono">${data.orderId}</span></div>
+                    <div style="margin-top:8px"><strong>Status:</strong> ${statusPill(data.status)}</div>
+                    <div style="margin-top:8px"><strong>Customer:</strong> ${data.customer?.name || '—'}</div>
+                    <div>${data.customer?.email || '—'}</div>
+                    <div>${data.customer?.phone || '—'}</div>
+                    <div style="margin-top:8px"><strong>Total:</strong> ${fmt(data.total)}</div>
+                    <div><strong>Payment:</strong> ${data.payment?.method || '—'}</div>
+                    <div><strong>Payment Status:</strong> ${data.payment?.status || '—'}</div>
+                    <hr style="margin:12px 0;border-color:var(--border)">
+                    <div style="font-weight:600">Items</div>
+                    ${(data.items || []).map(i => `
+                        <div style="display:flex;justify-content:space-between;margin-top:6px">
+                            <span>${i.productName} ×${i.qty}</span>
+                            <span class="mono">${fmt(i.qty * i.price)}</span>
+                        </div>
+                    `).join('')}
+                    ${data.notes ? `<div style="margin-top:12px;color:var(--text3)">${data.notes}</div>` : ''}
+                `;
+
+                const actions = document.getElementById('order-actions');
+                actions.innerHTML = '';
+
+                if (data.status === 'pending') {
+                    actions.appendChild(createActionBtn('Confirm Payment',
+                        () => updateOrderStatus(data.orderId, 'processing', 'confirmed'), 'btn btn-primary'));
+                    actions.appendChild(createActionBtn('Cancel',
+                        () => updateOrderStatus(data.orderId, 'cancelled', 'failed'), 'btn btn-danger'));
+                }
+
+                if (data.status === 'processing') {
+                    actions.appendChild(createActionBtn('Mark Delivered',
+                        () => updateOrderStatus(data.orderId, 'delivered', 'confirmed'), 'btn btn-primary'));
+                }
+
+                openModal('modal-order');
+            }
+            catch (e) { toast('Order load failed: ' + e.message, 'err'); }
+        }
+
+        async function updateOrderStatus(orderId, status, paymentStatus) {
+            try {
+                await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status, paymentStatus })
+                });
+                toast('Order updated', 'ok');
+                closeModal('modal-order');
+                loadOrders();
+                loadDashboard();
+            }
+            catch (e) { toast(e.message, 'err'); }
+        }
+
+        /* =========================================================
+           PRODUCT MODAL
+        ========================================================= */
+        function openAddProduct() {
+            editingProductId = null;
+            document.getElementById('modal-product-title').textContent = 'Add Product';
+
+            ['p-id', 'p-name', 'p-desc', 'p-price', 'p-sale', 'p-stock', 'p-badge', 'p-img']
+                .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+            document.getElementById('p-id').disabled = false;
+            document.getElementById('p-cat').value = 'games';
+            document.getElementById('p-featured').checked = false;
+            document.getElementById('p-active').checked = true;
+            document.getElementById('modal-product-err').textContent = '';
+            openModal('modal-product');
+        }
+
+        function openEditProduct(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            editingProductId = id;
+            document.getElementById('modal-product-title').textContent = 'Edit Product';
+
+            document.getElementById('p-id').value = product.id;
+            document.getElementById('p-id').disabled = true;
+            document.getElementById('p-name').value = product.name || '';
+            document.getElementById('p-desc').value = product.desc || '';
+            document.getElementById('p-cat').value = product.category || 'games';
+            document.getElementById('p-price').value = product.price || '';
+            document.getElementById('p-sale').value = product.sale || '';
+            document.getElementById('p-stock').value = product.stock || 0;
+            document.getElementById('p-badge').value = product.badge || '';
+            document.getElementById('p-img').value = product.img || '';
+            document.getElementById('p-featured').checked = !!product.featured;
+            document.getElementById('p-active').checked = product.active !== false;
+
+            openModal('modal-product');
+        }
+
+        async function saveProduct() {
+            const errEl = document.getElementById('modal-product-err');
+            errEl.textContent = '';
+
+            const body = {
+                id: document.getElementById('p-id').value.trim(),
+                name: document.getElementById('p-name').value.trim(),
+                category: document.getElementById('p-cat').value,
+                price: parseFloat(document.getElementById('p-price').value),
+                sale: parseFloat(document.getElementById('p-sale').value) || null,
+                stock: parseInt(document.getElementById('p-stock').value) || 0,
+                badge: document.getElementById('p-badge').value.trim(),
+                desc: document.getElementById('p-desc').value.trim(),
+                img: document.getElementById('p-img').value.trim(),
+                featured: document.getElementById('p-featured').checked,
+                active: document.getElementById('p-active').checked
+            };
+
+            if (!body.name || !body.price) { errEl.textContent = 'Name and price required'; return; }
+
+            try {
+                if (editingProductId) {
+                    await apiFetch('/api/products/' + editingProductId, {
+                        method: 'PUT', body: JSON.stringify(body)
+                    });
+                } else {
+                    if (!body.id) { errEl.textContent = 'Product ID required'; return; }
+                    await apiFetch('/api/products', { method: 'POST', body: JSON.stringify(body) });
+                }
+                closeModal('modal-product');
+                toast('Product saved', 'ok');
+                loadInventory();
+            }
+            catch (e) { errEl.textContent = e.message; }
+        }
+
+        async function deactivateProduct(id) {
+            if (!confirm('Deactivate product?')) return;
+            try {
+                await apiFetch('/api/products/' + id, { method: 'DELETE' });
+                toast('Product deactivated', 'ok');
+                loadInventory();
+            }
+            catch (e) { toast(e.message, 'err'); }
+        }
+
+        /* =========================================================
+           DELIVERY KEYS
+        ========================================================= */
+        function openAddKeys(productId, productName) {
+            keysProductId = productId;
+            document.getElementById('modal-keys-title').textContent = 'Add Keys — ' + productName;
+            document.getElementById('keys-input').value = '';
+            document.getElementById('modal-keys-err').textContent = '';
+            openModal('modal-keys');
+        }
+
+        async function submitKeys() {
+            const errEl = document.getElementById('modal-keys-err');
+            errEl.textContent = '';
+
+            const raw = document.getElementById('keys-input').value.trim();
+            if (!raw) { errEl.textContent = 'Paste at least one key'; return; }
+
+            const keys = raw.split('\n').map(v => v.trim()).filter(Boolean);
+
+            try {
+                const data = await apiFetch(`/api/products/${keysProductId}/keys`, {
+                    method: 'POST', body: JSON.stringify({ keys })
+                });
+                closeModal('modal-keys');
+                toast(`${data.keysAdded} keys added`, 'ok');
+                loadInventory();
+            }
+            catch (e) { errEl.textContent = e.message; }
+        }
+
+        /* =========================================================
+           PAYMENTS
+           — tries dedicated endpoints, falls back to /api/stats
+        ========================================================= */
+        const GATEWAYS = [
+            { id: 'jazzcash', label: 'JazzCash', color: '#22d68a', icon: 'ti-device-mobile' },
+            { id: 'easypaisa', label: 'Easypaisa', color: '#4fa0ff', icon: 'ti-device-mobile' },
+            { id: 'ibft', label: 'IBFT', color: '#f5a623', icon: 'ti-building-bank' },
+            { id: 'stripe', label: 'Stripe', color: '#7c6cff', icon: 'ti-credit-card' }
+        ];
+
+        // in-memory gateway config state
+        let _gwConfig = {};
+
+        async function loadPayments() {
+            // ---- Stats metrics ----
+            try {
+                const stats = await apiFetch('/api/admin/payments/stats');
+                document.getElementById('pay-success-rate').textContent = (stats.successRate != null) ? stats.successRate + '%' : '—';
+                document.getElementById('pay-avg-processing').textContent = (stats.avgProcessing != null) ? stats.avgProcessing + 's' : '—';
+                document.getElementById('pay-pending-review').textContent = (stats.pendingReview != null) ? stats.pendingReview : '—';
+            } catch {
+                // fallback: derive from /api/stats
+                try {
+                    const s = await apiFetch('/api/stats');
+                    document.getElementById('pay-success-rate').textContent = '—';
+                    document.getElementById('pay-avg-processing').textContent = '—';
+                    document.getElementById('pay-pending-review').textContent = s.orders?.pending ?? '—';
+                } catch { /* silent */ }
+            }
+
+            // ---- Gateway toggles & config ----
+            try {
+                const methods = await apiFetch('/api/admin/payment-methods');
+                // methods expected: [{ id, enabled, merchantId, apiKey, ... }, ...]
+                for (const m of methods) _gwConfig[m.id] = m;
+            } catch {
+                // no endpoint — seed defaults
+                for (const gw of GATEWAYS)
+                    _gwConfig[gw.id] = _gwConfig[gw.id] || { id: gw.id, enabled: true };
+            }
+
+            renderPaymentToggles();
+            renderGatewayCards();
+        }
+
+        function renderPaymentToggles() {
+            const container = document.getElementById('payment-toggles');
+            container.innerHTML = GATEWAYS.map(gw => {
+                const cfg = _gwConfig[gw.id] || {};
+                const enabled = cfg.enabled !== false;
+                return `
+                <div style="
+                    display:flex;align-items:center;gap:12px;
+                    padding:12px 0;border-bottom:1px solid var(--border)
+                ">
+                    <i class="ti ${gw.icon}" style="color:${gw.color};font-size:18px"></i>
+                    <span style="flex:1;font-size:13px;font-weight:500">${gw.label}</span>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text3)">
+                        <span>${enabled ? 'Enabled' : 'Disabled'}</span>
+                        <div class="toggle-track ${enabled ? 'toggle-on' : ''}" onclick="toggleGateway('${gw.id}',this)">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                    </label>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderGatewayCards() {
+            const grid = document.getElementById('gateway-config-grid');
+            grid.innerHTML = GATEWAYS.map(gw => {
+                const cfg = _gwConfig[gw.id] || {};
+                return `
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title" style="color:${gw.color}">${gw.label}</span>
+                        <span class="pill ${cfg.enabled !== false ? 'pill-green' : 'pill-red'}">
+                            ${cfg.enabled !== false ? 'Active' : 'Disabled'}
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Merchant / Store ID</label>
+                        <input class="form-input" id="gw-mid-${gw.id}"
+                            value="${cfg.merchantId || ''}" placeholder="Enter merchant ID">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key / Password</label>
+                        <input class="form-input" id="gw-key-${gw.id}" type="password"
+                            value="${cfg.apiKey || ''}" placeholder="Enter API key">
+                    </div>
+                    ${gw.id === 'ibft' ? `
+                    <div class="form-group">
+                        <label class="form-label">Account / IBAN</label>
+                        <input class="form-input" id="gw-acct-${gw.id}"
+                            value="${cfg.account || ''}" placeholder="Enter account number">
+                    </div>` : ''}
+                    <button class="btn btn-primary btn-sm" onclick="saveGateway('${gw.id}')">
+                        <i class="ti ti-device-floppy"></i> Save
+                    </button>
+                </div>
+                `;
+            }).join('');
+        }
+
+        async function toggleGateway(id, trackEl) {
+            const cfg = _gwConfig[id] || {};
+            const newVal = !(cfg.enabled !== false);
+            _gwConfig[id] = { ...cfg, enabled: newVal };
+
+            // optimistic UI
+            trackEl.classList.toggle('toggle-on', newVal);
+            trackEl.previousElementSibling.textContent = newVal ? 'Enabled' : 'Disabled';
+            renderGatewayCards();
+
+            try {
+                await apiFetch(`/api/admin/payment-methods/${id}/toggle`, {
+                    method: 'PUT', body: JSON.stringify({ enabled: newVal })
+                });
+                toast(`${id} ${newVal ? 'enabled' : 'disabled'}`, 'ok');
+            } catch {
+                toast('Toggle saved locally only (endpoint not found)', 'info');
+            }
+        }
+
+        async function saveGateway(id) {
+            const body = {
+                merchantId: document.getElementById(`gw-mid-${id}`)?.value.trim() || '',
+                apiKey: document.getElementById(`gw-key-${id}`)?.value.trim() || '',
+                account: document.getElementById(`gw-acct-${id}`)?.value.trim() || '',
+                enabled: (_gwConfig[id] || {}).enabled !== false
+            };
+            _gwConfig[id] = { ...(_gwConfig[id] || {}), ...body };
+
+            try {
+                await apiFetch(`/api/admin/payment-methods/${id}/config`, {
+                    method: 'PUT', body: JSON.stringify(body)
+                });
+                toast(`${id} config saved`, 'ok');
+            } catch {
+                toast(`${id} saved locally only (endpoint not found)`, 'info');
+            }
+        }
+
+        async function saveAllGateways() {
+            for (const gw of GATEWAYS) await saveGateway(gw.id);
+            toast('All gateways saved', 'ok');
+        }
+
+        /* =========================================================
+           CUSTOMERS
+           — tries /api/admin/customers first, falls back to
+             aggregating from /api/orders client-side
+        ========================================================= */
+        async function loadCustomers() {
+            try {
+                // Try dedicated endpoint first
+                let list;
+                try {
+                    list = await apiFetch('/api/admin/customers?limit=500');
+                    // normalise field names from dedicated endpoint
+                    list = list.map(c => ({
+                        name: c.name || c.customerName || '—',
+                        email: c.email || '—',
+                        orders: c.orderCount || c.orders || 0,
+                        spent: c.totalSpent || c.spent || 0,
+                        lastOrder: c.lastOrder || c.updatedAt || null
+                    }));
+                } catch {
+                    // Fallback: aggregate from orders
+                    const result = await apiFetch('/api/orders?limit=500');
+                    const orders = result.data || result || [];
+                    const map = {};
+                    for (const o of orders) {
+                        const key = o.customer?.email || o.customer?.phone || 'unknown';
+                        if (!map[key]) {
+                            map[key] = {
+                                name: o.customer?.name || '—',
+                                email: o.customer?.email || key,
+                                orders: 0,
+                                spent: 0,
+                                lastOrder: o.createdAt
+                            };
+                        }
+                        map[key].orders++;
+                        map[key].spent += o.total || 0;
+                        if (new Date(o.createdAt) > new Date(map[key].lastOrder))
+                            map[key].lastOrder = o.createdAt;
+                    }
+                    list = Object.values(map).sort((a, b) => b.spent - a.spent);
+                }
+
+                _custData = list;
+                renderCustomers(_custData);
+            }
+            catch (e) {
+                toast('Customers load failed: ' + e.message, 'err');
+                document.getElementById('cust-tbody').innerHTML =
+                    `<tr><td colspan="5" style="text-align:center;color:var(--red)">${e.message}</td></tr>`;
+            }
+        }
+
+        function renderCustomers(list) {
+            document.getElementById('cust-count').textContent = list.length + ' unique customers';
+            document.getElementById('cust-tbody').innerHTML = list.length
+                ? list.map(c => `
+                    <tr>
+                        <td>${c.name || '—'}</td>
+                        <td>${c.email || '—'}</td>
+                        <td>${c.orders || 0}</td>
+                        <td class="mono">${fmt(c.spent)}</td>
+                        <td>${c.lastOrder ? relativeTime(c.lastOrder) : '—'}</td>
+                    </tr>
+                `).join('')
+                : `<tr><td colspan="5" style="text-align:center;color:var(--text3)">No customers found.</td></tr>`;
+        }
+
+        function filterCustomers() {
+            const q = document.getElementById('cust-search').value.toLowerCase();
+            renderCustomers(_custData.filter(c =>
+                (c.name || '').toLowerCase().includes(q) ||
+                (c.email || '').toLowerCase().includes(q)
+            ));
+        }
+
+        /* =========================================================
+           CHANNELS  (stub)
+        ========================================================= */
+        function loadChannels() {
+            document.getElementById('channels-content').innerHTML = `
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Sales Channels</span></div>
+                    <p style="color:var(--text3);font-size:13px">No channels configured.</p>
+                </div>
+            `;
+        }
+
+        /* =========================================================
+           AI PROMPT  (stub)
+        ========================================================= */
+        function copyPrompt() {
+            const text = document.getElementById('prompt-text').textContent;
+            navigator.clipboard.writeText(text).then(() => toast('Copied', 'ok'));
+        }
+
+        /* =========================================================
+           SEED  (stub)
+        ========================================================= */
+        function seedFromProductsJS() {
+            toast('Seed function not implemented yet', 'info');
+        }
+
+        /* =========================================================
+           STARTUP
+        ========================================================= */
+        (async () => {
+            loadApiConfig();
+
+            if (authToken && await verifyToken()) {
+                document.getElementById('loginScreen').style.display = 'none';
+                loadDashboard();
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+            }
+        })();
+    </script>
+
+</body>
+
+>>>>>>> b6fd4ae (chore: import PROJECT-PLAYBEAT (sanitized))
+</html>
