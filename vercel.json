@@ -29,6 +29,38 @@
       "destination": "/main/index.html"
     },
     {
+      "source": "/admin",
+      "destination": "/main/admin/index.html"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "/main/admin/index.html"
+    },
+    {
+      "source": "/boss",
+      "destination": "/main/boss/index.html"
+    },
+    {
+      "source": "/boss/:path*",
+      "destination": "/main/boss/index.html"
+    },
+    {
+      "source": "/storefront",
+      "destination": "/main/storefront/index.html"
+    },
+    {
+      "source": "/storefront/:path*",
+      "destination": "/main/storefront/index.html"
+    },
+    {
+      "source": "/home/index",
+      "destination": "/main/index.html"
+    },
+    {
+      "source": "/home/index/:path*",
+      "destination": "/main/index.html"
+    },
+    {
       "source": "/api/:path*",
       "destination": "/server.js"
     },
